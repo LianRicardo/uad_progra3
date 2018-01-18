@@ -6,7 +6,6 @@
 // include glad *before* glfw
 #include <glad/glad.h>
 #include <GLFW/glfw3.h>
-
 #include "COpenGLRenderer.h"
 
 #include <string>
@@ -18,7 +17,8 @@ class CGameWindow
 public:
 	static const int DEFAULT_WINDOW_WIDTH  = 800;
 	static const int DEFAULT_WINDOW_HEIGHT = 600;
-
+	float FPS;
+	float framerate;
 private:
 	COpenGLRenderer * const m_ReferenceRenderer; // Const pointer to OpenGL renderer. To avoid calling OpenGL methods directly
 	bool         m_InitializedGLFW;        // Is GLFW framework initialized
@@ -62,6 +62,9 @@ private:
 
 	// Process user input (keyboard, mouse)
 	void processInput(void *appPointer);
+
+	//fps counter
+	void FPScounter();
 
 public:
 	// Constructors and Destructor

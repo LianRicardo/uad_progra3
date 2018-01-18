@@ -3,7 +3,7 @@
 // include glad *before* glfw
 #include <glad/glad.h>
 #include <GLFW/glfw3.h>
-
+#include <SDL.h>
 #include <iostream>
 using namespace std;
 
@@ -156,7 +156,6 @@ void CGameWindow::mainLoop(void *appPointer)
 	double PCFreq = 0.0;
 	__int64 CounterStart = 0;
 	LARGE_INTEGER li;
-
 	if (m_Window == NULL || appPointer == NULL || m_ReferenceRenderer == NULL)
 		return;
 
@@ -177,13 +176,23 @@ void CGameWindow::mainLoop(void *appPointer)
 	last_time = double(li.QuadPart) / PCFreq;
 
 	/* Loop until the user closes the window */
-	while (!glfwWindowShouldClose(m_Window))
+	while (!glfwWindowShouldClose(m_Window))     //este es el loop principal de la funcion
 	{
 		/* Clear color and depth buffer */
 		m_ReferenceRenderer->clearScreen();
 
 		/* Process user input */
 		processInput(appPointer);
+
+		//contador de frames con sdl
+		FPScounter();
+		static int framecounter = 0;
+		framecounter++;
+		if (framecounter == 1000)
+		{
+			cout << "Sus frames per second son" << "\t" << FPS << endl;
+			framecounter = 0;
+		}
 
 		/* Time-based animation using a high-performance counter */
 		// Good example of frame-based animation vs time-based animation: http://blog.sklambert.com/using-time-based-animation-implement/
@@ -192,6 +201,7 @@ void CGameWindow::mainLoop(void *appPointer)
 		delta_time   = current_time - last_time; // Calculate elapsed time
 		last_time    = current_time;             // Update last time to be the current time
 		accumulator += delta_time;               // 
+
 		while (accumulator >= dt) {              //
 			accumulator -= dt;
 		}
@@ -213,8 +223,44 @@ void CGameWindow::mainLoop(void *appPointer)
 	glfwDestroyWindow(m_Window);
 }
 
-/*
-*/
+void CGameWindow::FPScounter()
+{
+	int count;
+	static const int Num_de_frames = 100;
+	static float frametime[Num_de_frames];
+	static int cframe = 0;
+	static float ticksp = SDL_GetTicks();
+	float ticksc = SDL_GetTicks();
+	ticksc = SDL_GetTicks();
+	framerate = ticksc - ticksp;
+	ticksp = ticksc;
+	frametime[cframe % Num_de_frames] = framerate;
+
+	if (cframe < Num_de_frames)
+	{
+		count = cframe;
+	}
+	else
+	{
+		count = Num_de_frames;
+	}
+	float Frame_time_average = 0;
+	for (int i = 0; i < count; i++)
+	{
+		Frame_time_average += frametime[i];
+	}
+	Frame_time_average /= count;
+	if (Frame_time_average > 0)
+	{
+		FPS = 1000.0f / Frame_time_average;
+	}
+	else
+	{
+		FPS = 60.0f;
+	}
+	cframe++;
+}
+
 void CGameWindow::resizeCallback(GLFWwindow * window, int width, int height)
 {
 	CGameWindow::newWidth = width;
