@@ -5,6 +5,8 @@
 #include <iostream>
 #include <vector>
 #include <string>
+#include <wchar.h>
+#include <Windows.h>
 using namespace std;
 
 #include "../Include/Globals.h"
@@ -227,13 +229,15 @@ void CAppParcial2::update(double deltaTime)
 
 	// Calculate degrees to rotate
 	degreesToRotate   = m_rotationSpeed * (deltaTime / 1000.0); // degrees = rotation speed * delta time (convert delta time from milliseconds to seconds)
-	m_objectRotation += degreesToRotate;	                    // accumulate rotation degrees
+
+	//comente esto para que el objeto no rotara y para mover el objeto mas facil
+	//m_objectRotation += degreesToRotate;	                    // accumulate rotation degrees
 
 	// Reset rotation if needed
-	if (m_objectRotation > 360.0)
+	/*if (m_objectRotation > 360.0)
 	{
 		m_objectRotation -= 360.0;
-	}
+	}*/
 }
 
 /* */
@@ -279,12 +283,33 @@ bool CAppParcial2::load3DModel(const char * const filename)
 {
 	// Unload any current 3D model
 	unloadCurrent3DModel();
-	
-	// Create new 3D object
-	m_p3DModel = new C3DModel();
 
-	// Load object from file
-	bool loaded = m_p3DModel->loadFromFile(filename);
+	// Toma el tamaño necesario para crear el arreglo de caracteres.  strlen documentación  https://msdn.microsoft.com/en-us/library/78zh94ax.aspx?f=255&MSPPError=-2147217396
+	int num_chars = MultiByteToWideChar(CP_UTF8, 0, filename, (int)strlen(filename), NULL, 0);
+
+	//Genera un string del tamaño especificado por usuario y lo llena con caracteres del alfabeto    http://www.cplusplus.com/reference/cstdlib/malloc/ 
+	//wchar_t* wstrTo = (wchar_t*)malloc((num_chars + 1) * sizeof(wchar_t));
+	wchar_t* wstrTo = new wchar_t[num_chars + 1];
+
+
+	// Convierte la linea de caracteres y lo almacena en la hecha previamente
+	MultiByteToWideChar(CP_UTF8, 0, &filename[0], (int)strlen(filename), wstrTo, num_chars);
+	wstrTo[num_chars] = '\0';
+	
+	bool loaded = false;
+
+	// Create new 3D object
+	m_p3DModel = C3DModel::Load(wstrTo);
+
+	if(m_p3DModel!=	NULL)
+	{
+		// Load object from file
+		loaded = m_p3DModel->isInitialized();
+	}
+	else
+	{
+		cout << "error no se pudo cargar el archivo" << endl;
+	}
 
 	if (loaded)
 	{
@@ -377,6 +402,26 @@ void CAppParcial2::onF3(int mods)
 	{
 		moveCamera(1.0f);
 	}
+}
+
+void CAppParcial2::onArrowUp(int mods)
+{
+	m_objectPosition += m_Up;
+}
+
+void CAppParcial2::onArrowDown(int mods)
+{
+	m_objectPosition += m_Down;
+}
+
+void CAppParcial2::onArrowLeft(int mods)
+{
+	m_objectPosition += m_Left;
+}
+
+void CAppParcial2::onArrowRight(int mods)
+{
+	m_objectPosition += m_Right;
 }
 
 /* */

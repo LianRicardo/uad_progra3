@@ -17,9 +17,6 @@ class CGameWindow
 public:
 	static const int DEFAULT_WINDOW_WIDTH  = 800;
 	static const int DEFAULT_WINDOW_HEIGHT = 600;
-	float FPS;
-	float framerate;
-	float FPSMAX;
 private:
 	COpenGLRenderer * const m_ReferenceRenderer; // Const pointer to OpenGL renderer. To avoid calling OpenGL methods directly
 	bool         m_InitializedGLFW;        // Is GLFW framework initialized
@@ -47,10 +44,10 @@ private:
 	static bool requestSelectNextMenuItem; // Select next menu item
 	static bool requestSelectPrevMenuItem; // Select previous menu item
 
-	static bool requestArrowUp;            // Arrow up
-	static bool requestArrowDown;          // Arrow down
-	static bool requestArrowLeft;          // Arrow left
-	static bool requestArrowRight;         // Arrow right
+	static bool requestArrowUp;    
+	static bool requestArrowDown;  
+	static bool requestArrowLeft;  
+	static bool requestArrowRight; 
 
 	static int  keyMods;                   // Key modifiers, they match the GLFW key modifiers (alt, ctrl, shift)
 
@@ -68,10 +65,6 @@ private:
 
 	// Process user input (keyboard, mouse)
 	void processInput(void *appPointer);
-
-	//fps counter
-	void FPScounter();
-
 public:
 	// Constructors and Destructor
 	CGameWindow(COpenGLRenderer * renderer);

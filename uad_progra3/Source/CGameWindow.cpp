@@ -3,7 +3,8 @@
 // include glad *before* glfw
 #include <glad/glad.h>
 #include <GLFW/glfw3.h>
-#include <SDL.h>
+#include "../Include/CAppParcial2.h"
+
 #include <iostream>
 using namespace std;
 
@@ -11,30 +12,29 @@ using namespace std;
 #include "../Include/CApp.h"
 
 // Initialize static member variables
-bool CGameWindow::requestF1                 = false;
-bool CGameWindow::requestF2                 = false;
-bool CGameWindow::requestF3                 = false;
-bool CGameWindow::requestF4                 = false;
-bool CGameWindow::requestF5                 = false;
-bool CGameWindow::requestF6                 = false;
-bool CGameWindow::requestF7                 = false;
-bool CGameWindow::requestF8                 = false;
-bool CGameWindow::requestF9                 = false;
-bool CGameWindow::requestF10                = false;
-bool CGameWindow::requestF11                = false;
-bool CGameWindow::requestF12                = false;
-
-bool CGameWindow::requestExecuteAction      = false;
+bool CGameWindow::requestF1 = false;
+bool CGameWindow::requestF2 = false;
+bool CGameWindow::requestF3 = false;
+bool CGameWindow::requestF4 = false;
+bool CGameWindow::requestF5 = false;
+bool CGameWindow::requestF6 = false;
+bool CGameWindow::requestF7 = false;
+bool CGameWindow::requestF8 = false;
+bool CGameWindow::requestF9 = false;
+bool CGameWindow::requestF10 = false;
+bool CGameWindow::requestF11 = false;
+bool CGameWindow::requestF12 = false;
+bool CGameWindow::requestArrowUp = false;
+bool CGameWindow::requestArrowDown = false;
+bool CGameWindow::requestArrowLeft = false;
+bool CGameWindow::requestArrowRight = false;
+bool CGameWindow::requestExecuteAction = false;
 bool CGameWindow::requestSelectNextMenuItem = false;
 bool CGameWindow::requestSelectPrevMenuItem = false;
-bool CGameWindow::requestArrowUp            = false;
-bool CGameWindow::requestArrowDown          = false;
-bool CGameWindow::requestArrowLeft          = false;
-bool CGameWindow::requestArrowRight         = false;
-int  CGameWindow::keyMods                   = 0;
+int  CGameWindow::keyMods = 0;
 
-int  CGameWindow::newWidth                  = 0;
-int  CGameWindow::newHeight                 = 0;
+int  CGameWindow::newWidth = 0;
+int  CGameWindow::newHeight = 0;
 
 /* Default constructor
 */
@@ -51,7 +51,7 @@ CGameWindow::CGameWindow(COpenGLRenderer * renderer) :
 */
 CGameWindow::CGameWindow(COpenGLRenderer * renderer, int width, int height) :
 	m_ReferenceRenderer{ renderer },
-	m_Width{ width }, 
+	m_Width{ width },
 	m_Height{ height },
 	m_InitializedGLFW{ false }
 {
@@ -132,7 +132,7 @@ bool CGameWindow::create(const char *windowTitle)
 
 	/* Display OpenGL version and OpenGL Shading Language version */
 	cout << "OpenGL version: " << m_ReferenceRenderer->getOpenGLString(GL_VERSION) << endl; // GLVersion.major, GLVersion.minor
-	cout << "GLSL version: "   << m_ReferenceRenderer->getOpenGLString(GL_SHADING_LANGUAGE_VERSION) << endl;
+	cout << "GLSL version: " << m_ReferenceRenderer->getOpenGLString(GL_SHADING_LANGUAGE_VERSION) << endl;
 
 	/* Capture ESC key */
 	glfwSetInputMode(m_Window, GLFW_STICKY_KEYS, GL_TRUE);
@@ -154,12 +154,15 @@ void CGameWindow::mainLoop(void *appPointer)
 {
 	// Variables for time-based animation
 	double last_time = 0;
-	double dt = 1000 / 60;  // constant dt step of 1 frame every 60 seconds
-	double accumulator = 0;
+	double deltat = 1000 / 60;  // constant dt step of 1 frame every 60 seconds
+	double contador = 0;
 	double current_time, delta_time;
 	double PCFreq = 0.0;
 	__int64 CounterStart = 0;
 	LARGE_INTEGER li;
+	int framerate = 0;
+	bool notFirstFrame = false;   //   Checks that is not the first frame
+
 	if (m_Window == NULL || appPointer == NULL || m_ReferenceRenderer == NULL)
 		return;
 
@@ -180,7 +183,7 @@ void CGameWindow::mainLoop(void *appPointer)
 	last_time = double(li.QuadPart) / PCFreq;
 
 	/* Loop until the user closes the window */
-	while (!glfwWindowShouldClose(m_Window))     //este es el loop principal de la funcion
+	while (!glfwWindowShouldClose(m_Window))
 	{
 		/* Clear color and depth buffer */
 		m_ReferenceRenderer->clearScreen();
@@ -188,26 +191,24 @@ void CGameWindow::mainLoop(void *appPointer)
 		/* Process user input */
 		processInput(appPointer);
 
-		//contador de frames con sdl
-		FPScounter();
-		static int framecounter = 0;
-		framecounter++;
-		if (framecounter == 10)
-		{
-			cout << "Sus frames per second son" << "\t" << FPS << endl;
-			framecounter = 0;
-		}
-
 		/* Time-based animation using a high-performance counter */
 		// Good example of frame-based animation vs time-based animation: http://blog.sklambert.com/using-time-based-animation-implement/
 		QueryPerformanceCounter(&li);
 		current_time = double(li.QuadPart - CounterStart) / PCFreq;
-		delta_time   = current_time - last_time; // Calculate elapsed time
-		last_time    = current_time;             // Update last time to be the current time
-		accumulator += delta_time;               // 
+		delta_time = current_time - last_time; // Calculate elapsed time
+		last_time = current_time;             // Update last time to be the current time
+		contador += delta_time;
+		// 
+		if (!notFirstFrame) {     //  Don't know why the first time it runs accumulator is negative
+			contador = 0;
+			notFirstFrame = true;    // Set the flag off
+		}
 
-		while (accumulator >= dt) {              //
-			accumulator -= dt;
+		/* dt*62.5 equals one sec */
+		while (contador >= (deltat*62.5)) {    //   If accumulator is 1 sec then print FPS's and set accumulator to 0  
+			cout << "FPS : " << framerate << endl;
+			framerate = 0;
+			contador -= (deltat*62.5);
 		}
 
 		/* Update */
@@ -221,50 +222,15 @@ void CGameWindow::mainLoop(void *appPointer)
 
 		/* Poll for and process events */
 		glfwPollEvents();
+		framerate++;
 	}
 
 	/* Cleanup GLFW window */
 	glfwDestroyWindow(m_Window);
 }
 
-void CGameWindow::FPScounter()
-{
-	int count;
-	static const int Num_de_frames = 100;
-	static float frametime[Num_de_frames];
-	static int cframe = 0;
-	static float previusticks = SDL_GetTicks();
-	float currentticks = SDL_GetTicks();
-	currentticks = SDL_GetTicks();
-	framerate = currentticks - previusticks;
-	previusticks = currentticks;
-	frametime[cframe % Num_de_frames] = framerate;
-
-	if (cframe < Num_de_frames)
-	{
-		count = cframe;
-	}
-	else
-	{
-		count = Num_de_frames;
-	}
-	float Frame_time_average = 0;
-	for (int i = 0; i < count; i++)
-	{
-		Frame_time_average += frametime[i];
-	}
-	Frame_time_average /= count;
-	if (Frame_time_average > 0)
-	{
-		FPS = 1000.0f / Frame_time_average;
-	}
-	else
-	{
-		FPS = NULL;
-	}
-	cframe++;
-}
-
+/*
+*/
 void CGameWindow::resizeCallback(GLFWwindow * window, int width, int height)
 {
 	CGameWindow::newWidth = width;
@@ -318,26 +284,23 @@ void CGameWindow::keyboardCallback(GLFWwindow * window, int key, int scancode, i
 		case GLFW_KEY_F12:
 			CGameWindow::requestF12 = true;
 			break;
-		// ARROW DOWN key selects the next menu item if menu is active, application-specific otherwise
+			// ARROW DOWN key selects the next menu item
 		case GLFW_KEY_DOWN:
 			CGameWindow::requestSelectNextMenuItem = true;
 			CGameWindow::requestArrowDown = true;
 			break;
-		// ARROW UP key selects the prev menu item if menu is active, application-specific otherwise
+			// ARROW UP key selects the prev menu item
 		case GLFW_KEY_UP:
 			CGameWindow::requestSelectPrevMenuItem = true;
 			CGameWindow::requestArrowUp = true;
 			break;
-		// ARROW LEFT, app-specific
-		case GLFW_KEY_LEFT:
-			CGameWindow::requestArrowLeft = true;
-			break;
-		// ARROW RIGHT, app-specific
 		case GLFW_KEY_RIGHT:
 			CGameWindow::requestArrowRight = true;
 			break;
-		// ARROW RIGHT, app-specific
-		// ENTER key executes the current menu item action
+		case GLFW_KEY_LEFT:
+			CGameWindow::requestArrowLeft = true;
+			break;
+			// ENTER key executes the current menu item action
 		case GLFW_KEY_ENTER:
 			CGameWindow::requestExecuteAction = true;
 			break;
@@ -348,6 +311,7 @@ void CGameWindow::keyboardCallback(GLFWwindow * window, int key, int scancode, i
 		// Clear key modifiers
 		CGameWindow::keyMods = 0;
 
+		
 		switch (key)
 		{
 		case GLFW_KEY_UP:
@@ -482,11 +446,10 @@ void CGameWindow::processInput(void *appPointer)
 		}
 		else
 		{
-			CGameWindow::requestExecuteAction      = false;
+			CGameWindow::requestExecuteAction = false;
 			CGameWindow::requestSelectNextMenuItem = false;
 			CGameWindow::requestSelectPrevMenuItem = false;
 
-			// Check the arrow keys
 			if (CGameWindow::requestArrowUp)
 			{
 				((CApp *)appPointer)->onArrowUp(CGameWindow::keyMods);

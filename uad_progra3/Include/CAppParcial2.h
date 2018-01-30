@@ -9,6 +9,7 @@
 #include "CVector3.h"
 
 #define DEFAULT_ROTATION_SPEED 75.0
+#define DEFAULT_SPEED 1.0
 
 // Class that inherits from Base class CApp
 // Base class CApp has members for: CGameWindow, CGameMenu, and COpenGLRenderer, which we can access through the public/protected methods
@@ -29,6 +30,12 @@ private:
 
 	//  Object rotation speed (degrees per second)
 	double m_rotationSpeed;
+
+
+	CVector3 m_Up{ 0, 0, DEFAULT_SPEED };
+	CVector3 m_Down{ 0, 0, -DEFAULT_SPEED };
+	CVector3 m_Right{ DEFAULT_SPEED, 0, 0 };
+	CVector3 m_Left{ -DEFAULT_SPEED,0 , 0 };
 
 protected:
 	// Method to initialize the menu
@@ -61,6 +68,11 @@ public:
 	// This derived class only uses F2/F3
 	void onF2(int mods);
 	void onF3(int mods);
+	virtual void onArrowUp(int mods);
+	virtual void onArrowDown(int mods);
+	virtual void onArrowLeft(int mods);
+	virtual void onArrowRight(int mods);
+
 	
 private:
 
