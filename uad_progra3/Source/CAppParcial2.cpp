@@ -234,10 +234,10 @@ void CAppParcial2::update(double deltaTime)
 	//m_objectRotation += degreesToRotate;	                    // accumulate rotation degrees
 
 	// Reset rotation if needed
-	/*if (m_objectRotation > 360.0)
+	if (m_objectRotation > 360.0)
 	{
 		m_objectRotation -= 360.0;
-	}*/
+	}
 }
 
 /* */

@@ -3,6 +3,7 @@
 #include <iostream>
 #include <fstream>
 #include "../Include/C3DModel_obj.h"
+#include "../Include/C3DModel_fbx.h"
 #include <sstream>
 #include <string>
 #include <vector>
@@ -136,7 +137,21 @@ C3DModel* C3DModel::Load(wchar_t* filename)
 		}
 		else if (wcscmp(L"fbx", token) == 0) 
 		{
-			//return newObject;
+			if (filename == nullptr)
+			{
+				cout << "Error al convertir, puntero nulo." << endl;
+				return 0;
+			}
+
+			int size_needed = WideCharToMultiByte(CP_UTF8, 0, filename, (int)wcslen(filename), NULL, 0, NULL, NULL);
+			char * strTo = new char[size_needed + 1];
+			// Convierte la linea de caracteres y lo almacena en la hecha previamente 
+			WideCharToMultiByte(CP_UTF8, 0, filename, (int)wcslen(filename), strTo, size_needed, NULL, NULL);
+			strTo[size_needed] = '\0';
+			newObject = new C3DModel_fbx();
+			newObject->loadFromFile(strTo);
+			delete[] strTo;
+			return newObject;
 			return 0;
 		}
 

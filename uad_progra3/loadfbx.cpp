@@ -1,57 +1,16 @@
-#include "../stdafx.h"
 
-#include <iostream>
-#include <fstream>
-#include <sstream>
-#include <string>
-#include <vector>
+#include "Include\loadfbx.h"
+
 using namespace std;
 
-#include "../Include/C3DModel_fbx.h"
 inline void	write(IWriter* dst, const FbxScene* scene) { scene->Write(dst); };
-
-C3DModel_fbx::~C3DModel_fbx()
-{
-	reset();
-}
-
-C3DModel_fbx::C3DModel_fbx()
-	:m_vertices(nullptr),
-	m_normals(nullptr),
-	m_UVCoords(nullptr)
-{
-	cout << "Contructor: 3DModel_fbx()" << endl;
-}
-
-void C3DModel_fbx::reset()
-{
-	if (m_vertices != NULL)
-	{
-		cout << "deleting vertices" << endl;
-		delete[] m_vertices;
-		m_vertices = NULL;
-	}
-	if (m_normals != NULL)
-	{
-		cout << "deleting normals" << endl;
-		delete[] m_normals;
-		m_normals = NULL;
-	}
-	if (m_UVCoords != NULL)
-	{
-		cout << "deleting UV coords" << endl;
-		delete[] m_UVCoords;
-		m_UVCoords = NULL;
-	}
-}
 
 class FbxScene::Loader : public FbxUtil
 {
 	FbxScene* scene;
 	Stream& file;
 public:
-	Loader(FbxScene* s, Stream& f) : scene(s), file(f) 
-	{
+	Loader(FbxScene* s, Stream& f) : scene(s), file(f) {
 		for (Header hdr; hdr.LoadNext(file);)
 		{
 			if (hdr == "Objects:")
@@ -70,10 +29,7 @@ public:
 	public:
 		Header() {}
 		//bool	LoadNext(FbxStream& src);
-		Header&operator=(const char*src) 
-		{
-		    strncpy(&this->at(0), src, 256); return *this; 
-		}
+		Header&operator=(const char*src) { strncpy(&this->at(0), src, 256); return *this; }
 
 		bool    LoadNext(Stream& src)
 		{
@@ -460,4 +416,3 @@ void LoadFbx(FbxScene* pScene, FbxUtil::Stream& file)
 {
 	FbxScene::Loader loader(pScene, file);
 }
-
