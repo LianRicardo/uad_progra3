@@ -87,18 +87,6 @@
     <ClInclude Include="Include\C3DModel_obj.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="Include\Escenafbx.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="Include\FBXMATH.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="Include\fbxutil.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="Include\loadfbx.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="stdafx.cpp">
@@ -150,18 +138,6 @@
       <Filter>Source Files</Filter>
     </ClCompile>
     <ClCompile Include="Source\C3DModel_obj.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="loadfbx.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="Source\Esenafbx.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="Source\FBXMATH.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="Source\fbxutil.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
   </ItemGroup>

@@ -4,9 +4,9 @@
 using namespace std;
 #include "C3DModel.h"
 #include "CVector3.h"
-#include "../Include/Escenafbx.h"
+//#include "../Include/Escenafbx.h"
 
-void LoadFbx(FbxScene*   scn, FbxUtil::Stream& src);
+//void LoadFbx(FbxScene*   scn, FbxUtil::Stream& src);
 
 
 #ifdef TEST
@@ -40,8 +40,8 @@ public:
 protected:
 	bool loadFromFile(const char * const filename)
 	{
-		FbxUtil::Stream fs;
-		FbxScene scn;
+		//FbxUtil::Stream fs;
+		//FbxScene scn;
 		/*const char** argv;
 		auto srcfile = argv[1];
 		if (!srcfile) {
@@ -52,6 +52,6 @@ protected:
 			printf("could not open %s", srcfile);
 			return 0;
 		}*/
-		LoadFbx(&scn, fs);       //tengo que hallar una forma de pasarle el const char* const para que el header lo agarre y lo lea
+		//LoadFbx(&scn, fs);       //tengo que hallar una forma de pasarle el const char* const para que el header lo agarre y lo lea
 	}
 };

@@ -182,11 +182,7 @@
     <ClInclude Include="Include\COpenGLRenderer.h" />
     <ClInclude Include="Include\CSceneManager.h" />
     <ClInclude Include="Include\CVector3.h" />
-    <ClInclude Include="Include\Escenafbx.h" />
-    <ClInclude Include="Include\FBXMATH.h" />
-    <ClInclude Include="Include\fbxutil.h" />
     <ClInclude Include="Include\Globals.h" />
-    <ClInclude Include="Include\loadfbx.h" />
     <ClInclude Include="Include\LoadShaders.h" />
     <ClInclude Include="Include\LoadTGA.h" />
     <ClInclude Include="Include\MathHelper.h" />
@@ -200,7 +196,6 @@
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">NotUsing</PrecompiledHeader>
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Release|x64'">NotUsing</PrecompiledHeader>
     </ClCompile>
-    <ClCompile Include="loadfbx.cpp" />
     <ClCompile Include="Source\C3DModel.cpp" />
     <ClCompile Include="Source\C3DModel_fbx.cpp" />
     <ClCompile Include="Source\C3DModel_obj.cpp" />
@@ -213,9 +208,6 @@
     <ClCompile Include="Source\CGameWindow.cpp" />
     <ClCompile Include="Source\COpenGLRenderer.cpp" />
     <ClCompile Include="Source\CVector3.cpp" />
-    <ClCompile Include="Source\Esenafbx.cpp" />
-    <ClCompile Include="Source\FBXMATH.cpp" />
-    <ClCompile Include="Source\fbxutil.cpp" />
     <ClCompile Include="Source\LoadShaders.cpp" />
     <ClCompile Include="Source\LoadTGA.cpp" />
     <ClCompile Include="stdafx.cpp" />
