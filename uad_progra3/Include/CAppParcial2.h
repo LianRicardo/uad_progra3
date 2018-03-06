@@ -10,7 +10,7 @@
 #include "CLoger.h"
 
 #define DEFAULT_ROTATION_SPEED 5.0
-#define DEFAULT_SPEED 0.01
+#define DEFAULT_SPEED 0.05
 
 // Class that inherits from Base class CApp
 // Base class CApp has members for: CGameWindow, CGameMenu, and COpenGLRenderer, which we can access through the public/protected methods

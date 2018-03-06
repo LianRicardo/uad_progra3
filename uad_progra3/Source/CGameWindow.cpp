@@ -147,11 +147,11 @@ bool CGameWindow::create(const char *windowTitle)
 	glfwSetCursorPosCallback(m_Window, mouseCallback);
 
 	glfwSetInputMode(m_Window, GLFW_CURSOR, GLFW_CURSOR_DISABLED);
-	glfwSetWindowPos(m_Window, 10, (monitor1->height - m_Height) / 2);
+	glfwSetWindowPos(m_Window, 15, (monitor1->height - m_Height) / 2);
 	HWND consoleWindow = GetConsoleWindow();
 	RECT r;
 	GetWindowRect(consoleWindow, &r);
-	SetWindowPos(consoleWindow, 0, 10 + m_Width + 10, (monitor1->height - m_Height) / 2, 0, 0, SWP_NOSIZE | SWP_NOZORDER);
+	SetWindowPos(consoleWindow, 0, 5 + m_Width + 5, (monitor1->height - m_Height) / 2, 0, 0, SWP_NOSIZE | SWP_NOZORDER);
 
 	return true;
 }

@@ -416,9 +416,9 @@ void CAppParcial2::onF3(int mods)
 void CAppParcial2::onF4(int mods)
 {
 	_STARTUPINFOW notep = { sizeof(_STARTUPINFOW) };
-	_PROCESS_INFORMATION procInfo;
-	TCHAR b[] = TEXT("notepad");
-	CreateProcess(NULL, b, NULL, NULL, false, NULL, NULL, NULL, &notep, &procInfo);
+	TCHAR c[] = TEXT("notepad");
+	_PROCESS_INFORMATION info;
+	CreateProcess(NULL, c, NULL, NULL, false, NULL, NULL, NULL, &notep, &info);
 }
 
 void CAppParcial2::onArrowUp(int mods)
