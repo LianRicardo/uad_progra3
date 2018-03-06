@@ -7,6 +7,7 @@
 #include <glad/glad.h>
 #include <GLFW/glfw3.h>
 #include "COpenGLRenderer.h"
+#include "CLoger.h"
 
 #include <string>
 using namespace std;
@@ -48,6 +49,9 @@ private:
 	static bool requestArrowDown;  
 	static bool requestArrowLeft;  
 	static bool requestArrowRight; 
+	static bool requestmouse;
+	static CVector3 lmousep;
+	static CVector3 cursormov;
 
 	static int  keyMods;                   // Key modifiers, they match the GLFW key modifiers (alt, ctrl, shift)
 
@@ -62,7 +66,7 @@ private:
 	static void resizeCallback(GLFWwindow * window, int width, int height);
 	// This callback will be called by GLFW when a physical key is pressed in the keyboard
 	static void keyboardCallback(GLFWwindow * window, int key, int scancode, int action, int mods);
-
+	static void mouseCallback(GLFWwindow* window, double x, double y);
 	// Process user input (keyboard, mouse)
 	void processInput(void *appPointer);
 public:

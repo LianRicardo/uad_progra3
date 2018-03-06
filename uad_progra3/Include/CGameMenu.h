@@ -6,6 +6,7 @@
 #include "CCircularDoubleLinkedList.h"
 #include "CGameMenuItem.h"
 #include "COpenGLRenderer.h"
+#include "CLoger.h"
 
 #define DEFAULT_MENU_ITEM_WIDTH 0.5f
 #define DEFAULT_MENU_ITEM_HEIGHT 0.1f

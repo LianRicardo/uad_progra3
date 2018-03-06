@@ -33,13 +33,13 @@ C3DModel::C3DModel()
 	m_graphicsMemoryObjectId(0),
 	m_shaderProgramId(0)
 {
-	cout << "Constructor: C3DModel()" << endl;
+	Log << "Constructor: C3DModel()" << endl;
 }
 
 /* */
 C3DModel::~C3DModel()
 {
-	cout << "Destructor: C3DModel()" << endl;
+	Log << "Destructor: C3DModel()" << endl;
 	reset();
 }
 
@@ -49,37 +49,37 @@ void C3DModel::reset()
 {
 	if (m_vertexIndices != NULL)
 	{
-		cout << "deleting vertex indices" << endl;
+		Log << "deleting vertex indices" << endl;
 		delete[] m_vertexIndices;
 		m_vertexIndices = NULL;
 	}
 	if (m_normalIndices != NULL)
 	{
-		cout << "deleting normal indices" << endl;
+		Log << "deleting normal indices" << endl;
 		delete[] m_normalIndices;
 		m_normalIndices = NULL;
 	}
 	if (m_UVindices != NULL)
 	{
-		cout << "deleting UV indices" << endl;
+		Log << "deleting UV indices" << endl;
 		delete[] m_UVindices;
 		m_UVindices = NULL;
 	}
 	if (m_verticesRaw != NULL)
 	{
-		cout << "deleting vertices (float)" << endl;
+		Log << "deleting vertices (float)" << endl;
 		delete[] m_verticesRaw;
 		m_verticesRaw = NULL;
 	}
 	if (m_normalsRaw != NULL)
 	{
-		cout << "deleting normals (float)" << endl;
+		Log << "deleting normals (float)" << endl;
 		delete[] m_normalsRaw;
 		m_normalsRaw = NULL;
 	}
 	if (m_uvCoordsRaw != NULL)
 	{
-		cout << "deleting uvCoords (float)" << endl;
+		Log << "deleting uvCoords (float)" << endl;
 		delete[] m_uvCoordsRaw;
 		m_uvCoordsRaw = NULL;
 	}
@@ -115,7 +115,7 @@ C3DModel* C3DModel::Load(wchar_t* filename)
 		{
 			if (filename == nullptr) 
 			{
-				cout << "Error al convertir, puntero nulo." << endl;
+				Log << "Error al convertir, puntero nulo." << endl;
 				return 0;
 			}
 
@@ -139,7 +139,7 @@ C3DModel* C3DModel::Load(wchar_t* filename)
 		{
 			if (filename == nullptr)
 			{
-				cout << "Error al convertir, puntero nulo." << endl;
+				Log << "Error al convertir, puntero nulo." << endl;
 				return 0;
 			}
 
@@ -148,7 +148,7 @@ C3DModel* C3DModel::Load(wchar_t* filename)
 			// Convierte la linea de caracteres y lo almacena en la hecha previamente 
 			WideCharToMultiByte(CP_UTF8, 0, filename, (int)wcslen(filename), strTo, size_needed, NULL, NULL);
 			strTo[size_needed] = '\0';
-			newObject = new C3DModel_fbx();
+			//newObject = new C3DModel_fbx();
 			newObject->loadFromFile(strTo);
 			delete[] strTo;
 			return newObject;

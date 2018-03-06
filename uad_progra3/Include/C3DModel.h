@@ -7,6 +7,7 @@
 using namespace std;
 
 #include "CVector3.h"
+#include "CLoger.h"
 
 class C3DModel
 {

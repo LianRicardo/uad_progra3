@@ -1,7 +1,10 @@
 #include "../stdafx.h"
 
 #include "windows.h"
-
+#include "../Include/Globals.h"
+#include "../Include/CAppParcial2.h"
+#include "../Include/C3DModel.h"
+#include "../Include/LoadTGA.h"
 #include <iostream>
 #include <vector>
 #include <string>
@@ -9,12 +12,9 @@
 #include <Windows.h>
 using namespace std;
 
-#include "../Include/Globals.h"
-#include "../Include/CAppParcial2.h"
-#include "../Include/C3DModel.h"
-#include "../Include/LoadTGA.h"
 
 /* */
+
 CAppParcial2::CAppParcial2() : 
 	m_p3DModel(NULL),
 	m_currentDeltaTime{ 0.0 },
@@ -22,7 +22,7 @@ CAppParcial2::CAppParcial2() :
 	m_objectPosition{ 0.0f, 0.0f, 0.0f },
 	m_rotationSpeed{ DEFAULT_ROTATION_SPEED }
 {
-	cout << "Constructor: CAppParcial2()" << endl;
+	Log << "Constructor: CAppParcial2()" << endl;
 }
 
 /* */
@@ -34,13 +34,13 @@ CAppParcial2::CAppParcial2(int window_width, int window_height) :
 	m_objectPosition{ 0.0f, 0.0f, 0.0f },
 	m_rotationSpeed{ DEFAULT_ROTATION_SPEED }
 {
-	cout << "Constructor: CAppParcial2(int window_width, int window_height)" << endl;
+	Log << "Constructor: CAppParcial2(int window_width, int window_height)" << endl;
 }
 
 /* */
 CAppParcial2::~CAppParcial2()
 {
-	cout << "Destructor: ~CAppParcial2()" << endl;
+	Log<< "Destructor: ~CAppParcial2()" << endl;
 	unloadCurrent3DModel();
 }
 
@@ -68,7 +68,7 @@ void CAppParcial2::run()
 			}
 
 			// Enter main loop
-			cout << "Entering Main loop" << endl;
+			Log << "Entering Main loop" << endl;
 			getGameWindow()->mainLoop(this);
 		}
 	}
@@ -77,7 +77,7 @@ void CAppParcial2::run()
 /* */
 bool CAppParcial2::initializeMenu()
 {
-	cout << "CAppParcial2::initializeMenu()" << endl;
+	Log << "CAppParcial2::initializeMenu()" << endl;
 
 	if (getMenu() != NULL)
 	{
@@ -231,12 +231,16 @@ void CAppParcial2::update(double deltaTime)
 	degreesToRotate   = m_rotationSpeed * (deltaTime / 1000.0); // degrees = rotation speed * delta time (convert delta time from milliseconds to seconds)
 
 	//comente esto para que el objeto no rotara y para mover el objeto mas facil
-	//m_objectRotation += degreesToRotate;	                    // accumulate rotation degrees
+	m_objectRotation += degreesToRotate;	                    // accumulate rotation degrees
 
 	// Reset rotation if needed
-	if (m_objectRotation > 360.0)
+	while (m_objectRotation > 360.0)
 	{
 		m_objectRotation -= 360.0;
+	}
+	if (m_objectRotation < 0.0)
+	{
+		m_objectRotation -= 0.0;
 	}
 }
 
@@ -272,6 +276,11 @@ void CAppParcial2::render()
 		}
 		else
 		{
+			double totalDegreesRotatedRadians = m_objectRotation * 3.1459 / 180.0;
+
+			// Get a matrix that has both the object rotation and translation
+			MathHelper::Matrix4 modelMatrix = MathHelper::ModelMatrix((float)totalDegreesRotatedRadians, m_objectPosition);
+
 			// No model loaded, show test cube
 			getOpenGLRenderer()->renderTestObject(&m_currentDeltaTime);
 		}
@@ -308,7 +317,7 @@ bool CAppParcial2::load3DModel(const char * const filename)
 	}
 	else
 	{
-		cout << "error no se pudo cargar el archivo" << endl;
+		Log << "error no se pudo cargar el archivo" << endl;
 	}
 
 	if (loaded)
@@ -381,11 +390,11 @@ void CAppParcial2::onF2(int mods)
 		int size_needed = WideCharToMultiByte(CP_UTF8, 0, &wideStringBuffer[0], (int)wideStringBuffer.size(), NULL, 0, NULL, NULL);
 		std::string multibyteString(size_needed, 0);
 		WideCharToMultiByte(CP_UTF8, 0, &wideStringBuffer[0], (int)wideStringBuffer.size(), &multibyteString[0], size_needed, NULL, NULL);
-		cout << "Filename to load: " << multibyteString.c_str() << endl;
+		Log << "Filename to load: " << multibyteString.c_str() << endl;
 
 		if (!load3DModel(multibyteString.c_str()))
 		{
-			cout << "Unable to load 3D model" << endl;
+			Log << "Unable to load 3D model" << endl;
 		}
 	}
 }
@@ -402,6 +411,14 @@ void CAppParcial2::onF3(int mods)
 	{
 		moveCamera(1.0f);
 	}
+}
+
+void CAppParcial2::onF4(int mods)
+{
+	_STARTUPINFOW notep = { sizeof(_STARTUPINFOW) };
+	_PROCESS_INFORMATION procInfo;
+	TCHAR b[] = TEXT("notepad");
+	CreateProcess(NULL, b, NULL, NULL, false, NULL, NULL, NULL, &notep, &procInfo);
 }
 
 void CAppParcial2::onArrowUp(int mods)
@@ -422,6 +439,18 @@ void CAppParcial2::onArrowLeft(int mods)
 void CAppParcial2::onArrowRight(int mods)
 {
 	m_objectPosition += m_Right;
+}
+
+void CAppParcial2::onMouseMove(float deltaX, float deltaY)
+{
+	if (deltaX < 100.0f && deltaY < 100.0f)
+	{
+		float posiciones[3];
+		m_objectPosition.getValues(posiciones);
+		posiciones[0] -= deltaX * DEFAULT_SPEED;
+		posiciones[2] -= deltaY * DEFAULT_SPEED;
+		m_objectPosition.setValues(posiciones);
+	}
 }
 
 /* */
@@ -447,7 +476,7 @@ void CAppParcial2::executeMenuAction()
 			break;
 		case 2:
 			// Not implemented
-			cout << "<MENU OPTION NOT IMPLEMENTED>" << endl;
+			Log << "<MENU OPTION NOT IMPLEMENTED>" << endl;
 			break;
 		case 3:
 			if (getGameWindow() != NULL)

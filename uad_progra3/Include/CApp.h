@@ -4,8 +4,10 @@
 #define CAPP_H
 
 #include "CGameWindow.h"
+#include "CLoger.h"
 #include "CGameMenu.h"
 #include "COpenGLRenderer.h"
+#include "..\Include\CCamera.h"
 
 #define KEY_MOD_SHIFT     0x0001
 #define KEY_MOD_CONTROL   0x0002
@@ -23,10 +25,11 @@ private:
 	CGameMenu       *m_Menu;           // Pointer to our CMenu object
 	COpenGLRenderer *m_OpenGLRenderer; // Pointer to our OpenGL renderer object
 	bool m_Paused;                     // Is the app paused?  (i,e: window minimized)
-
+	CCamera *m_camara;
 	bool isWindowInitialized() const;  // Is the CGameWindow object initialized ?
 	
 protected:
+	CCamera * const getcamara();
 	CGameWindow     * const getGameWindow()     const { return m_Window; }
 	CGameMenu       * const getMenu()           const { return m_Menu; }
 	COpenGLRenderer * const getOpenGLRenderer() const { return m_OpenGLRenderer; }
@@ -58,6 +61,8 @@ public:
 	virtual void onF9(int mods)  {}                       // F9
 	virtual void onF10(int mods) {}                       // F10
 	virtual void onF11(int mods) {}                       // F11
+
+	virtual void onMouseMove(float deltaX, float deltaY) {}
 
 	virtual void onArrowUp(int mods) {}
 	virtual void onArrowDown(int mods) {}

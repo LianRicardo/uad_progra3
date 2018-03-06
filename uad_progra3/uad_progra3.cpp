@@ -9,9 +9,18 @@ using namespace std;
 #include "Include/CGameWindow.h"
 #include "Include/CApp.h"
 #include "Include/CAppParcial2.h"
+#include <VersionHelpers.h>
 
 int main(int argc, char** argv)
 {
+	if (!IsWindows10OrGreater()) 
+	{
+		Log << "es windows 10" << endl;
+	}
+	if (!IsWindows8Point1OrGreater()) 
+	{
+		Log << "es windows 8 0 mayor" << endl;
+	}
 	CApp *app = NULL;                  // Pointer to BASE class CApp
 	app = new CAppParcial2(800, 600);  // Using pointer to base class, create a new object of DERIVED class CAppParcial2
 	app->run();                        // Run the app

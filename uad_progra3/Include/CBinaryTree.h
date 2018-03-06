@@ -3,6 +3,7 @@
 #include "CBinaryTreeNode.h"
 #include <iostream>
 #include <vector>
+#include "..\CLoger.h"
 using namespace std;
 
 /* Binary Tree Template Class */
@@ -55,14 +56,14 @@ template <class T >
 CBinaryTree<T>::CBinaryTree() :
 	m_rootNode{NULL}
 {
-	cout << "CBinaryTree() Constructor" << endl;
+	Log << "CBinaryTree() Constructor" << endl;
 }
 
 /* */
 template <class T> 
 CBinaryTree<T>::~CBinaryTree()
 {
-	cout << "CBinaryTree() Destructor" << endl;
+	Log << "CBinaryTree() Destructor" << endl;
 	clearTree();
 }
 

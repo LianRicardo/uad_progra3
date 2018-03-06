@@ -7,9 +7,10 @@
 #include "CApp.h"
 #include "C3DModel.h"
 #include "CVector3.h"
+#include "CLoger.h"
 
-#define DEFAULT_ROTATION_SPEED 75.0
-#define DEFAULT_SPEED 1.0
+#define DEFAULT_ROTATION_SPEED 5.0
+#define DEFAULT_SPEED 0.01
 
 // Class that inherits from Base class CApp
 // Base class CApp has members for: CGameWindow, CGameMenu, and COpenGLRenderer, which we can access through the public/protected methods
@@ -68,10 +69,12 @@ public:
 	// This derived class only uses F2/F3
 	void onF2(int mods);
 	void onF3(int mods);
+	void onF4(int mods);
 	virtual void onArrowUp(int mods);
 	virtual void onArrowDown(int mods);
 	virtual void onArrowLeft(int mods);
 	virtual void onArrowRight(int mods);
+	virtual void onMouseMove(float deltaX, float deltaY);
 
 	
 private:

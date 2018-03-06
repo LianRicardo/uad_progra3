@@ -8,6 +8,7 @@
 #include <GLFW/glfw3.h>
 
 #include "MathHelper.h"
+#include "CLoger.h"
 
 #define BUFFER_OFFSET(a) ((void*)(a))
 #define MIN_CAMERA_DISTANCE 5.0f

@@ -31,10 +31,12 @@ bool CGameWindow::requestArrowRight = false;
 bool CGameWindow::requestExecuteAction = false;
 bool CGameWindow::requestSelectNextMenuItem = false;
 bool CGameWindow::requestSelectPrevMenuItem = false;
+bool CGameWindow::requestmouse = false;
 int  CGameWindow::keyMods = 0;
-
 int  CGameWindow::newWidth = 0;
 int  CGameWindow::newHeight = 0;
+CVector3 CGameWindow::lmousep = { 0,0,0 };
+CVector3 CGameWindow::cursormov = { 0,0,0 };
 
 /* Default constructor
 */
@@ -73,7 +75,7 @@ void CGameWindow::initializeGLFW()
 	if (glfwInit())
 	{
 		m_InitializedGLFW = true;
-		cout << "Initialized GLFW library" << endl;
+		Log << "Initialized GLFW library" << endl;
 
 		/* Set hints for new window */
 		glfwWindowHint(GLFW_CONTEXT_VERSION_MAJOR, 4);  // We want OpenGL 4.3
@@ -84,7 +86,7 @@ void CGameWindow::initializeGLFW()
 	}
 	else
 	{
-		cout << "Unable to initialize GLFW library" << endl;
+		Log << "Unable to initialize GLFW library" << endl;
 	}
 }
 
@@ -94,13 +96,13 @@ bool CGameWindow::create(const char *windowTitle)
 {
 	if (m_Width <= 0 || m_Height <= 0)
 	{
-		std::cout << "Invalid window size" << std::endl;
+		Log << "Invalid window size" << std::endl;
 		return false;
 	}
 
 	if (m_ReferenceRenderer == NULL)
 	{
-		std::cout << "OpenGL renderer is NULL" << endl;
+		Log << "OpenGL renderer is NULL" << endl;
 		return false;
 	}
 
@@ -112,7 +114,7 @@ bool CGameWindow::create(const char *windowTitle)
 	/* If the window cannot be created, return */
 	if (!m_Window)
 	{
-		cout << "Could not create GLFW Window" << endl;
+		Log << "Could not create GLFW Window" << endl;
 		glfwTerminate();
 		return false;
 	}
@@ -126,19 +128,30 @@ bool CGameWindow::create(const char *windowTitle)
 	/* Load all OpenGL functions with GLAD using the glfw loader function */
 	if (!gladLoadGLLoader((GLADloadproc)glfwGetProcAddress))
 	{
-		std::cout << "Failed to initialize OpenGL context (using glad)" << std::endl;
+		Log << "Failed to initialize OpenGL context (using glad)" << std::endl;
 		return false;
 	}
 
 	/* Display OpenGL version and OpenGL Shading Language version */
-	cout << "OpenGL version: " << m_ReferenceRenderer->getOpenGLString(GL_VERSION) << endl; // GLVersion.major, GLVersion.minor
-	cout << "GLSL version: " << m_ReferenceRenderer->getOpenGLString(GL_SHADING_LANGUAGE_VERSION) << endl;
+	Log << "OpenGL version: " << m_ReferenceRenderer->getOpenGLString(GL_VERSION) << endl; // GLVersion.major, GLVersion.minor
+	Log << "GLSL version: " << m_ReferenceRenderer->getOpenGLString(GL_SHADING_LANGUAGE_VERSION) << endl;
+
+	const GLFWvidmode* monitor1 = glfwGetVideoMode(glfwGetPrimaryMonitor());
 
 	/* Capture ESC key */
 	glfwSetInputMode(m_Window, GLFW_STICKY_KEYS, GL_TRUE);
 
 	/* Keyboard callback */
 	glfwSetKeyCallback(m_Window, keyboardCallback);
+
+	glfwSetCursorPosCallback(m_Window, mouseCallback);
+
+	glfwSetInputMode(m_Window, GLFW_CURSOR, GLFW_CURSOR_DISABLED);
+	glfwSetWindowPos(m_Window, 10, (monitor1->height - m_Height) / 2);
+	HWND consoleWindow = GetConsoleWindow();
+	RECT r;
+	GetWindowRect(consoleWindow, &r);
+	SetWindowPos(consoleWindow, 0, 10 + m_Width + 10, (monitor1->height - m_Height) / 2, 0, 0, SWP_NOSIZE | SWP_NOZORDER);
 
 	return true;
 }
@@ -152,6 +165,9 @@ bool CGameWindow::create(const char *windowTitle)
 */
 void CGameWindow::mainLoop(void *appPointer)
 {
+	double mousex;
+	double mousey;
+
 	// Variables for time-based animation
 	double last_time = 0;
 	double deltat = 1000 / 60;  // constant dt step of 1 frame every 60 seconds
@@ -166,14 +182,14 @@ void CGameWindow::mainLoop(void *appPointer)
 	if (m_Window == NULL || appPointer == NULL || m_ReferenceRenderer == NULL)
 		return;
 
-	cout << "CGameWindow::mainLoop()" << endl;
+	Log << "CGameWindow::mainLoop()" << endl;
 
 	m_ReferenceRenderer->setViewport(m_Width, m_Height);
 	m_ReferenceRenderer->enableDepthTest();
 
 	if (!QueryPerformanceFrequency(&li))
 	{
-		cout << "QueryPerformanceFrequency failed!\n";
+		Log << "QueryPerformanceFrequency failed!\n";
 		return;
 	}
 
@@ -206,7 +222,7 @@ void CGameWindow::mainLoop(void *appPointer)
 
 		/* dt*62.5 equals one sec */
 		while (contador >= (deltat*62.5)) {    //   If accumulator is 1 sec then print FPS's and set accumulator to 0  
-			cout << "FPS : " << framerate << endl;
+			Log << "FPS : " << framerate << endl;
 			framerate = 0;
 			contador -= (deltat*62.5);
 		}
@@ -328,6 +344,20 @@ void CGameWindow::keyboardCallback(GLFWwindow * window, int key, int scancode, i
 			break;
 		}
 	}
+}
+
+void CGameWindow::mouseCallback(GLFWwindow * window, double x, double y)
+{
+	if (x != 0 && y != 0)
+	{
+		CGameWindow::requestmouse = true;
+
+		auto last = CGameWindow::lmousep;
+		CVector3 nPos(x, y, 0);
+		CGameWindow::cursormov = nPos - last;
+		CGameWindow::lmousep = nPos;
+	}
+	else CGameWindow::requestmouse = false;
 }
 
 /*
@@ -465,6 +495,10 @@ void CGameWindow::processInput(void *appPointer)
 			if (CGameWindow::requestArrowRight)
 			{
 				((CApp *)appPointer)->onArrowRight(CGameWindow::keyMods);
+			}
+			if (CGameWindow::requestmouse)
+			{
+				((CApp *)appPointer)->onMouseMove(CGameWindow::cursormov.getX(), CGameWindow::cursormov.getY());
 			}
 		}
 	}

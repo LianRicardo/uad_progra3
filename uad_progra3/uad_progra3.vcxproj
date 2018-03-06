@@ -169,25 +169,25 @@
     <ClInclude Include="Include\C3DModel_fbx.h" />
     <ClInclude Include="Include\C3DModel_obj.h" />
     <ClInclude Include="Include\CApp.h" />
-    <ClInclude Include="Include\CAppExamenFinal.h" />
     <ClInclude Include="Include\CAppParcial2.h" />
+    <ClInclude Include="Include\CArchivo.h" />
     <ClInclude Include="Include\CBinaryTree.h" />
     <ClInclude Include="Include\CBinaryTreeNode.h" />
+    <ClInclude Include="Include\CCamera.h" />
     <ClInclude Include="Include\CCircularDoubleLinkedList.h" />
     <ClInclude Include="Include\CCircularDoubleLinkedListNode.h" />
     <ClInclude Include="Include\CColor.h" />
+    <ClInclude Include="Include\CConsola.h" />
     <ClInclude Include="Include\CGameMenu.h" />
     <ClInclude Include="Include\CGameMenuItem.h" />
     <ClInclude Include="Include\CGameWindow.h" />
+    <ClInclude Include="Include\CLoger.h" />
     <ClInclude Include="Include\COpenGLRenderer.h" />
-    <ClInclude Include="Include\CSceneManager.h" />
     <ClInclude Include="Include\CVector3.h" />
     <ClInclude Include="Include\Globals.h" />
     <ClInclude Include="Include\LoadShaders.h" />
     <ClInclude Include="Include\LoadTGA.h" />
     <ClInclude Include="Include\MathHelper.h" />
-    <ClInclude Include="stdafx.h" />
-    <ClInclude Include="targetver.h" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Dependencies\GLAD\glad-4.3-core\src\glad.c">
@@ -201,16 +201,19 @@
     <ClCompile Include="Source\C3DModel_obj.cpp" />
     <ClCompile Include="Source\CApp.cpp" />
     <ClCompile Include="Source\CAppParcial2.cpp" />
+    <ClCompile Include="Source\CArchivo.cpp" />
+    <ClCompile Include="Source\CCamera.cpp" />
     <ClCompile Include="Source\CCircularDoubleLinkedList.cpp" />
     <ClCompile Include="Source\CCircularDoubleLinkedListNode.cpp" />
+    <ClCompile Include="Source\CConsola.cpp" />
     <ClCompile Include="Source\CGameMenu.cpp" />
     <ClCompile Include="Source\CGameMenuItem.cpp" />
     <ClCompile Include="Source\CGameWindow.cpp" />
+    <ClCompile Include="Source\CLoger.cpp" />
     <ClCompile Include="Source\COpenGLRenderer.cpp" />
     <ClCompile Include="Source\CVector3.cpp" />
     <ClCompile Include="Source\LoadShaders.cpp" />
     <ClCompile Include="Source\LoadTGA.cpp" />
-    <ClCompile Include="stdafx.cpp" />
     <ClCompile Include="uad_progra3.cpp" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
