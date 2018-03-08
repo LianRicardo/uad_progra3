@@ -8,7 +8,7 @@ using namespace std;
 /* */
 CApp::CApp()
 {
-	Log << "Constructor: CApp()" << endl;
+	cout << "Constructor: CApp()" << endl;
 
 	// Create OpenGLRenderer Object
 	m_OpenGLRenderer = new COpenGLRenderer();
@@ -25,7 +25,7 @@ CApp::CApp()
 /* */
 CApp::CApp(int window_width, int window_height)
 {
-	Log << "Constructor: CApp(int window_width, int window_height)" << endl;
+	cout << "Constructor: CApp(int window_width, int window_height)" << endl;
 	
 	// Create OpenGLRenderer Object
 	m_OpenGLRenderer = new COpenGLRenderer();
@@ -42,7 +42,7 @@ CApp::CApp(int window_width, int window_height)
 /* */
 CApp::~CApp()
 {
-	Log << "Destructor: ~CApp()" << endl;
+	cout << "Destructor: ~CApp()" << endl;
 
 	// Free CGameWindow object resources
 	if (m_Window != NULL)
@@ -68,7 +68,7 @@ CApp::~CApp()
 	// Free COpenGLRenderer object resources
 	if (m_OpenGLRenderer != NULL)
 	{
-		Log << "Delete m_OpenGLRenderer" << endl;
+		cout << "Delete m_OpenGLRenderer" << endl;
 		delete m_OpenGLRenderer;
 	}
 
@@ -117,8 +117,8 @@ void CApp::setMenuActive(bool active)
 				m_OpenGLRenderer->setClearScreenColor(0.88f, 0.88f, 0.88f);
 			}
 
-			Log << "Menu is active" << endl;
-			Log << "Selected option is #" << m_Menu->getSelectedMenuItemNumber() << endl;
+			cout << "Menu is active" << endl;
+			cout << "Selected option is #" << m_Menu->getSelectedMenuItemNumber() << endl;
 		}
 		else
 		{
@@ -127,7 +127,7 @@ void CApp::setMenuActive(bool active)
 				m_OpenGLRenderer->setClearScreenColor(0.15f, 0.75f, 0.75f);
 			}
 
-			Log << "Menu is NOT active" << endl;
+			cout << "Menu is NOT active" << endl;
 		}
 	}
 }
@@ -137,7 +137,7 @@ void CApp::executeMenuAction()
 {
 	if (m_Menu != NULL)
 	{
-		Log << "Execute Menu action" << endl;
+		cout << "Execute Menu action" << endl;
 	}
 }
 
@@ -147,8 +147,8 @@ void CApp::selectNextMenuItem()
 	if (m_Menu != NULL)
 	{
 		m_Menu->selectMenuItem(true);
-		Log << "Select next menu option" << endl;
-		Log << "Selected option is #" << m_Menu->getSelectedMenuItemNumber() << endl;
+		cout << "Select next menu option" << endl;
+		cout << "Selected option is #" << m_Menu->getSelectedMenuItemNumber() << endl;
 	}
 }
 
@@ -158,8 +158,8 @@ void CApp::selectPrevMenuItem()
 	if (m_Menu != NULL)
 	{
 		m_Menu->selectMenuItem(false);
-		Log << "Select prev menu option" << endl;
-		Log << "Selected option is #" << m_Menu->getSelectedMenuItemNumber() << endl;
+		cout << "Select prev menu option" << endl;
+		cout << "Selected option is #" << m_Menu->getSelectedMenuItemNumber() << endl;
 	}
 }
 

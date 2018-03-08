@@ -38,7 +38,7 @@ template <class T>
 CCircularDoubleLinkedList<T>::CCircularDoubleLinkedList() :
 	m_FirstNode{ NULL }
 {
-	Log << "Constructor: CCircularDoubleLinkedList()" << endl;
+	cout << "Constructor: CCircularDoubleLinkedList()" << endl;
 }
 
 /*
@@ -46,7 +46,7 @@ CCircularDoubleLinkedList<T>::CCircularDoubleLinkedList() :
 template <class T>
 CCircularDoubleLinkedList<T>::~CCircularDoubleLinkedList()
 {
-	Log << "Destructor: CCircularDoubleLinkedList()" << endl;
+	cout << "Destructor: CCircularDoubleLinkedList()" << endl;
 
 	if (m_FirstNode != NULL) 
 	{
@@ -71,7 +71,7 @@ CCircularDoubleLinkedList<T>::~CCircularDoubleLinkedList()
 template <class T>
 bool CCircularDoubleLinkedList<T>::createNode(T *newDataItem)
 {
-	Log << "CCircularDoubleLinkedList<T>::createNode()" << endl;
+	cout << "CCircularDoubleLinkedList<T>::createNode()" << endl;
 
 	CCircularDoubleLinkedListNode<T> *newNode = new CCircularDoubleLinkedListNode<T>(newDataItem);
 	return addNode(newNode);
@@ -82,7 +82,7 @@ bool CCircularDoubleLinkedList<T>::createNode(T *newDataItem)
 template <class T>
 bool CCircularDoubleLinkedList<T>::addNode(CCircularDoubleLinkedListNode<T> *newNode)
 {
-	Log << "CCircularDoubleLinkedList<T>::addNode()" << endl;
+	cout << "CCircularDoubleLinkedList<T>::addNode()" << endl;
 
 	if (m_FirstNode == NULL)
 	{

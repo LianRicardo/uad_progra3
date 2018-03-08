@@ -16,7 +16,7 @@ CGameMenu::CGameMenu() :
 	m_textureUniformLocation{ 0 },
 	m_textureObjectId{ 0 }
 {
-	Log << "Constructor: CGameMenu()" << endl;
+	cout << "Constructor: CGameMenu()" << endl;
 
 	m_MenuItemList = new CCircularDoubleLinkedList<CGameMenuItem>();
 }
@@ -24,7 +24,7 @@ CGameMenu::CGameMenu() :
 /* */
 CGameMenu::~CGameMenu()
 {
-	Log << "Destructor: CGameMenu()" << endl;
+	cout << "Destructor: CGameMenu()" << endl;
 
 	m_Active = false;
 
@@ -100,7 +100,7 @@ void CGameMenu::cleanupGraphicsObjects(COpenGLRenderer * const renderer)
 {
 	if (m_MenuItemList != NULL)
 	{
-		Log << "CGameMenu::cleanupGraphicsObjects()" << endl;
+		cout << "CGameMenu::cleanupGraphicsObjects()" << endl;
 
 		// Delete texture object
 		renderer->deleteTexture(&m_textureObjectId);
@@ -115,7 +115,7 @@ void CGameMenu::cleanupGraphicsObjects(COpenGLRenderer * const renderer)
 			menuItem = firstNode->getData();
 			if (menuItem != NULL)
 			{
-				Log << "deleting menu item VAO: " << *(menuItem->getArrayObjectID()) << endl;
+				cout << "deleting menu item VAO: " << *(menuItem->getArrayObjectID()) << endl;
 				renderer->freeGraphicsMemoryForObject(&m_shaderProgramId, menuItem->getArrayObjectID());
 			}
 		}
@@ -130,7 +130,7 @@ void CGameMenu::cleanupGraphicsObjects(COpenGLRenderer * const renderer)
 				menuItem = currentNode->getData();
 				if (menuItem != NULL)
 				{
-					Log << "deleting menu item VAO: " << *(menuItem->getArrayObjectID()) << endl;
+					cout << "deleting menu item VAO: " << *(menuItem->getArrayObjectID()) << endl;
 					renderer->freeGraphicsMemoryForObject(&m_shaderProgramId, menuItem->getArrayObjectID());
 				}
 
@@ -143,7 +143,7 @@ void CGameMenu::cleanupGraphicsObjects(COpenGLRenderer * const renderer)
 /* */ // TO-DO, remove x and y, not needed anymore
 void CGameMenu::addMenuItem(const char * const menuLabel, float x, float y, unsigned int vaoId/*, CMenuItem *parent*/)
 {
-	Log << "CGameMenu::addMenuItem()" << endl;
+	cout << "CGameMenu::addMenuItem()" << endl;
 
 	if (m_MenuItemList != NULL)
 	{

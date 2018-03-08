@@ -3,7 +3,8 @@
 #include "windows.h"
 #include "../Include/Globals.h"
 #include "../Include/CAppParcial2.h"
-#include "../Include/C3DModel.h"
+//#include "../Include/C3DModel.h
+#include "../Include/OBJLoaderDLL.h"
 #include "../Include/LoadTGA.h"
 #include <iostream>
 #include <vector>
@@ -22,7 +23,7 @@ CAppParcial2::CAppParcial2() :
 	m_objectPosition{ 0.0f, 0.0f, 0.0f },
 	m_rotationSpeed{ DEFAULT_ROTATION_SPEED }
 {
-	Log << "Constructor: CAppParcial2()" << endl;
+	cout << "Constructor: CAppParcial2()" << endl;
 }
 
 /* */
@@ -34,13 +35,13 @@ CAppParcial2::CAppParcial2(int window_width, int window_height) :
 	m_objectPosition{ 0.0f, 0.0f, 0.0f },
 	m_rotationSpeed{ DEFAULT_ROTATION_SPEED }
 {
-	Log << "Constructor: CAppParcial2(int window_width, int window_height)" << endl;
+	cout << "Constructor: CAppParcial2(int window_width, int window_height)" << endl;
 }
 
 /* */
 CAppParcial2::~CAppParcial2()
 {
-	Log<< "Destructor: ~CAppParcial2()" << endl;
+	cout<< "Destructor: ~CAppParcial2()" << endl;
 	unloadCurrent3DModel();
 }
 
@@ -68,7 +69,7 @@ void CAppParcial2::run()
 			}
 
 			// Enter main loop
-			Log << "Entering Main loop" << endl;
+			cout << "Entering Main loop" << endl;
 			getGameWindow()->mainLoop(this);
 		}
 	}
@@ -77,7 +78,7 @@ void CAppParcial2::run()
 /* */
 bool CAppParcial2::initializeMenu()
 {
-	Log << "CAppParcial2::initializeMenu()" << endl;
+	cout << "CAppParcial2::initializeMenu()" << endl;
 
 	if (getMenu() != NULL)
 	{
@@ -317,7 +318,7 @@ bool CAppParcial2::load3DModel(const char * const filename)
 	}
 	else
 	{
-		Log << "error no se pudo cargar el archivo" << endl;
+		cout << "error no se pudo cargar el archivo" << endl;
 	}
 
 	if (loaded)
@@ -390,11 +391,11 @@ void CAppParcial2::onF2(int mods)
 		int size_needed = WideCharToMultiByte(CP_UTF8, 0, &wideStringBuffer[0], (int)wideStringBuffer.size(), NULL, 0, NULL, NULL);
 		std::string multibyteString(size_needed, 0);
 		WideCharToMultiByte(CP_UTF8, 0, &wideStringBuffer[0], (int)wideStringBuffer.size(), &multibyteString[0], size_needed, NULL, NULL);
-		Log << "Filename to load: " << multibyteString.c_str() << endl;
+		cout << "Filename to load: " << multibyteString.c_str() << endl;
 
 		if (!load3DModel(multibyteString.c_str()))
 		{
-			Log << "Unable to load 3D model" << endl;
+			cout << "Unable to load 3D model" << endl;
 		}
 	}
 }
@@ -476,7 +477,7 @@ void CAppParcial2::executeMenuAction()
 			break;
 		case 2:
 			// Not implemented
-			Log << "<MENU OPTION NOT IMPLEMENTED>" << endl;
+			cout << "<MENU OPTION NOT IMPLEMENTED>" << endl;
 			break;
 		case 3:
 			if (getGameWindow() != NULL)

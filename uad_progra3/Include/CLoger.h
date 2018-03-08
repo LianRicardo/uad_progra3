@@ -1,7 +1,7 @@
 #pragma once
 #include <iostream>
 
-#define Log CLoger::getloger()->out()
+#define cout CLoger::getloger()->out()
 
 class CLoger
 {

@@ -4,7 +4,7 @@ CConsola* CConsola::single = 0;
 
 CConsola::CConsola()
 {
-	stream = &std::cout;
+	stream = &std::out;
 }
 
 CConsola::~CConsola()

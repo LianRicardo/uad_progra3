@@ -33,13 +33,13 @@ C3DModel::C3DModel()
 	m_graphicsMemoryObjectId(0),
 	m_shaderProgramId(0)
 {
-	Log << "Constructor: C3DModel()" << endl;
+	cout << "Constructor: C3DModel()" << endl;
 }
 
 /* */
 C3DModel::~C3DModel()
 {
-	Log << "Destructor: C3DModel()" << endl;
+	cout << "Destructor: C3DModel()" << endl;
 	reset();
 }
 
@@ -49,37 +49,37 @@ void C3DModel::reset()
 {
 	if (m_vertexIndices != NULL)
 	{
-		Log << "deleting vertex indices" << endl;
+		cout << "deleting vertex indices" << endl;
 		delete[] m_vertexIndices;
 		m_vertexIndices = NULL;
 	}
 	if (m_normalIndices != NULL)
 	{
-		Log << "deleting normal indices" << endl;
+		cout << "deleting normal indices" << endl;
 		delete[] m_normalIndices;
 		m_normalIndices = NULL;
 	}
 	if (m_UVindices != NULL)
 	{
-		Log << "deleting UV indices" << endl;
+		cout << "deleting UV indices" << endl;
 		delete[] m_UVindices;
 		m_UVindices = NULL;
 	}
 	if (m_verticesRaw != NULL)
 	{
-		Log << "deleting vertices (float)" << endl;
+		cout << "deleting vertices (float)" << endl;
 		delete[] m_verticesRaw;
 		m_verticesRaw = NULL;
 	}
 	if (m_normalsRaw != NULL)
 	{
-		Log << "deleting normals (float)" << endl;
+		cout << "deleting normals (float)" << endl;
 		delete[] m_normalsRaw;
 		m_normalsRaw = NULL;
 	}
 	if (m_uvCoordsRaw != NULL)
 	{
-		Log << "deleting uvCoords (float)" << endl;
+		cout << "deleting uvCoords (float)" << endl;
 		delete[] m_uvCoordsRaw;
 		m_uvCoordsRaw = NULL;
 	}
@@ -115,7 +115,7 @@ C3DModel* C3DModel::Load(wchar_t* filename)
 		{
 			if (filename == nullptr) 
 			{
-				Log << "Error al convertir, puntero nulo." << endl;
+				cout << "Error al convertir, puntero nulo." << endl;
 				return 0;
 			}
 
@@ -139,7 +139,7 @@ C3DModel* C3DModel::Load(wchar_t* filename)
 		{
 			if (filename == nullptr)
 			{
-				Log << "Error al convertir, puntero nulo." << endl;
+				cout << "Error al convertir, puntero nulo." << endl;
 				return 0;
 			}
 

@@ -1,13 +1,12 @@
-#include "../stdafx.h"
+#define OBJLoaderDLL_Exports __declspec(dllexport)
 
+#include "OBJLoaderDLL.h"
 #include <iostream>
+#include <vector>
+#include <string>
 #include <fstream>
 #include <sstream>
-#include <string>
-#include <vector>
 using namespace std;
-
-#include "../Include/C3DModel_obj.h"
 
 C3DModel_obj::~C3DModel_obj()
 {
@@ -16,11 +15,11 @@ C3DModel_obj::~C3DModel_obj()
 }
 
 C3DModel_obj::C3DModel_obj()
-	: m_vertices(nullptr) ,
-	m_normals(nullptr) ,
+	: m_vertices(nullptr),
+	m_normals(nullptr),
 	m_UVCoords(nullptr)
 {
-		cout << "corriendo constructor del obj" << endl;
+	cout << "corriendo constructor del obj" << endl;
 }
 
 bool C3DModel_obj::readFile(const char * filename, bool countOnly)

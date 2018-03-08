@@ -53,7 +53,7 @@ CCircularDoubleLinkedListNode<T>::CCircularDoubleLinkedListNode() :
 	m_Parent{ NULL },
 	m_Child{ NULL }
 {
-	Log << "Constructor: CCircularDoubleLinkedListNode()" << endl;
+	cout << "Constructor: CCircularDoubleLinkedListNode()" << endl;
 }
 
 /*
@@ -66,7 +66,7 @@ CCircularDoubleLinkedListNode<T>::CCircularDoubleLinkedListNode(T *data) :
 	m_Parent{ NULL },
 	m_Child{ NULL }
 {
-	Log << "Constructor: CCircularDoubleLinkedListNode()" << endl;
+	cout << "Constructor: CCircularDoubleLinkedListNode()" << endl;
 }
 
 /*
@@ -74,7 +74,7 @@ CCircularDoubleLinkedListNode<T>::CCircularDoubleLinkedListNode(T *data) :
 template <class T>
 CCircularDoubleLinkedListNode<T>::~CCircularDoubleLinkedListNode()
 {
-	Log << "Destructor: CCircularDoubleLinkedListNode()" << endl;
+	cout << "Destructor: CCircularDoubleLinkedListNode()" << endl;
 
 	if (m_Data != NULL)
 	{

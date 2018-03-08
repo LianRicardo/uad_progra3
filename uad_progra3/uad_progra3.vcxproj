@@ -78,8 +78,8 @@
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
     <LinkIncremental>true</LinkIncremental>
-    <IncludePath>$(SolutionDir)Dependencies\GLFW\glfw-3.2.1.bin.WIN64\include;$(SolutionDir)Dependencies\GLAD\glad-4.5-core\include;C:\Users\Lian9\git\uad_progra3\uad_progra3\Dependencies\SDL\include;$(IncludePath)</IncludePath>
-    <LibraryPath>$(SolutionDir)Dependencies\GLFW\glfw-3.2.1.bin.WIN64\lib-vc2015;C:\Users\Lian9\git\uad_progra3\uad_progra3\Dependencies\SDL\lib\x64;$(LibraryPath)</LibraryPath>
+    <IncludePath>$(SolutionDir)Dependencies\GLFW\glfw-3.2.1.bin.WIN64\include;$(SolutionDir)Dependencies\GLAD\glad-4.5-core\include;C:\Users\Lian9\git\uad_progra3\uad_progra3\Dependencies\SDL\include;C:\Users\Lian9\git\uad_progra3\OBJLoaderDLL;$(IncludePath)</IncludePath>
+    <LibraryPath>$(SolutionDir)Dependencies\GLFW\glfw-3.2.1.bin.WIN64\lib-vc2015;C:\Users\Lian9\git\uad_progra3\uad_progra3\Dependencies\SDL\lib\x64;C:\Users\Lian9\git\uad_progra3\OBJLoaderDLL\Binaries\DLL\x64\Debug;$(LibraryPath)</LibraryPath>
     <IntDir>Binaries\Intermediate\$(Platform)\$(Configuration)\</IntDir>
     <OutDir>$(SolutionDir)Binaries\Exe\$(Platform)\$(Configuration)\</OutDir>
   </PropertyGroup>
@@ -122,7 +122,7 @@
     <Link>
       <SubSystem>Console</SubSystem>
       <GenerateDebugInformation>true</GenerateDebugInformation>
-      <AdditionalDependencies>opengl32.lib;glu32.lib;glfw3.lib;SDL2.lib;SDL2main.lib;SDL2test.lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <AdditionalDependencies>opengl32.lib;glu32.lib;OBJLoaderDLL.lib;glfw3.lib;SDL2.lib;SDL2main.lib;SDL2test.lib;%(AdditionalDependencies)</AdditionalDependencies>
     </Link>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
@@ -165,6 +165,7 @@
     <Text Include="ReadMe.txt" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="..\OBJLoaderDLL\OBJLoaderDLL.h" />
     <ClInclude Include="Include\C3DModel.h" />
     <ClInclude Include="Include\C3DModel_fbx.h" />
     <ClInclude Include="Include\C3DModel_obj.h" />

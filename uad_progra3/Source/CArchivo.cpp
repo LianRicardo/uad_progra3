@@ -43,7 +43,7 @@ std::string CArchivo::filename()
 	char filename[MAX_PATH];
 	DWORD size = GetModuleFileNameA(NULL, filename, MAX_PATH);
 	if (!size)
-		std::cout << "Could not find EXE file name.\n";
+		std::out << "Could not find EXE file name.\n";
 
 	char *nextToken = NULL;
 	char *token = NULL;

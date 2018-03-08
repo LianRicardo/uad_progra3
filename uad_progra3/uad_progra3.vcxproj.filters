@@ -87,6 +87,9 @@
     <ClInclude Include="Include\CCamera.h">
       <Filter>Header Files</Filter>
     </ClInclude>
+    <ClInclude Include="..\OBJLoaderDLL\OBJLoaderDLL.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="uad_progra3.cpp">

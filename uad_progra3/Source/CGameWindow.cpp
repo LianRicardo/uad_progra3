@@ -75,7 +75,7 @@ void CGameWindow::initializeGLFW()
 	if (glfwInit())
 	{
 		m_InitializedGLFW = true;
-		Log << "Initialized GLFW library" << endl;
+		cout << "Initialized GLFW library" << endl;
 
 		/* Set hints for new window */
 		glfwWindowHint(GLFW_CONTEXT_VERSION_MAJOR, 4);  // We want OpenGL 4.3
@@ -86,7 +86,7 @@ void CGameWindow::initializeGLFW()
 	}
 	else
 	{
-		Log << "Unable to initialize GLFW library" << endl;
+		cout << "Unable to initialize GLFW library" << endl;
 	}
 }
 
@@ -96,13 +96,13 @@ bool CGameWindow::create(const char *windowTitle)
 {
 	if (m_Width <= 0 || m_Height <= 0)
 	{
-		Log << "Invalid window size" << std::endl;
+		cout << "Invalid window size" << std::endl;
 		return false;
 	}
 
 	if (m_ReferenceRenderer == NULL)
 	{
-		Log << "OpenGL renderer is NULL" << endl;
+		cout << "OpenGL renderer is NULL" << endl;
 		return false;
 	}
 
@@ -114,7 +114,7 @@ bool CGameWindow::create(const char *windowTitle)
 	/* If the window cannot be created, return */
 	if (!m_Window)
 	{
-		Log << "Could not create GLFW Window" << endl;
+		cout << "Could not create GLFW Window" << endl;
 		glfwTerminate();
 		return false;
 	}
@@ -128,13 +128,13 @@ bool CGameWindow::create(const char *windowTitle)
 	/* Load all OpenGL functions with GLAD using the glfw loader function */
 	if (!gladLoadGLLoader((GLADloadproc)glfwGetProcAddress))
 	{
-		Log << "Failed to initialize OpenGL context (using glad)" << std::endl;
+		cout << "Failed to initialize OpenGL context (using glad)" << std::endl;
 		return false;
 	}
 
 	/* Display OpenGL version and OpenGL Shading Language version */
-	Log << "OpenGL version: " << m_ReferenceRenderer->getOpenGLString(GL_VERSION) << endl; // GLVersion.major, GLVersion.minor
-	Log << "GLSL version: " << m_ReferenceRenderer->getOpenGLString(GL_SHADING_LANGUAGE_VERSION) << endl;
+	cout << "OpenGL version: " << m_ReferenceRenderer->getOpenGLString(GL_VERSION) << endl; // GLVersion.major, GLVersion.minor
+	cout << "GLSL version: " << m_ReferenceRenderer->getOpenGLString(GL_SHADING_LANGUAGE_VERSION) << endl;
 
 	const GLFWvidmode* monitor1 = glfwGetVideoMode(glfwGetPrimaryMonitor());
 
@@ -182,14 +182,14 @@ void CGameWindow::mainLoop(void *appPointer)
 	if (m_Window == NULL || appPointer == NULL || m_ReferenceRenderer == NULL)
 		return;
 
-	Log << "CGameWindow::mainLoop()" << endl;
+	cout << "CGameWindow::mainLoop()" << endl;
 
 	m_ReferenceRenderer->setViewport(m_Width, m_Height);
 	m_ReferenceRenderer->enableDepthTest();
 
 	if (!QueryPerformanceFrequency(&li))
 	{
-		Log << "QueryPerformanceFrequency failed!\n";
+		cout << "QueryPerformanceFrequency failed!\n";
 		return;
 	}
 
@@ -222,7 +222,7 @@ void CGameWindow::mainLoop(void *appPointer)
 
 		/* dt*62.5 equals one sec */
 		while (contador >= (deltat*62.5)) {    //   If accumulator is 1 sec then print FPS's and set accumulator to 0  
-			Log << "FPS : " << framerate << endl;
+			cout << "FPS : " << framerate << endl;
 			framerate = 0;
 			contador -= (deltat*62.5);
 		}
