@@ -18,6 +18,8 @@ public:
 
 	CVector3& operator=(const CVector3 &other);
 	CVector3& operator+=(const CVector3 &other);
+	CVector3 operator+(const CVector3 &other);
+	CVector3 operator/(float f);
 	CVector3 CVector3::cross(const CVector3 & other);
 	CVector3 CVector3::operator-(const CVector3 & other);
 

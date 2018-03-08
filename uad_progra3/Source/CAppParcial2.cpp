@@ -282,7 +282,7 @@ void CAppParcial2::render()
 			MathHelper::Matrix4 modelMatrix = MathHelper::ModelMatrix((float)totalDegreesRotatedRadians, m_objectPosition);
 
 			// No model loaded, show test cube
-			getOpenGLRenderer()->renderTestObject(&m_currentDeltaTime);
+			getOpenGLRenderer()->renderTestObject(&modelMatrix);
 		}
 	}
 }
@@ -350,6 +350,11 @@ bool CAppParcial2::load3DModel(const char * const filename)
 	}
 
 	return loaded;
+}
+
+void CAppParcial2::inicialized()
+{
+
 }
 
 /* */

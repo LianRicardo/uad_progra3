@@ -47,7 +47,7 @@ public:
 	CAppParcial2();
 	CAppParcial2(int window_width, int window_height);
 	~CAppParcial2();
-
+	void inicialized();
 	// Inherited methods from CApp
 	// ---------------------------
 
@@ -70,11 +70,11 @@ public:
 	void onF2(int mods);
 	void onF3(int mods);
 	void onF4(int mods);
-	virtual void onArrowUp(int mods);
-	virtual void onArrowDown(int mods);
-	virtual void onArrowLeft(int mods);
-	virtual void onArrowRight(int mods);
-	virtual void onMouseMove(float deltaX, float deltaY);
+	void onArrowUp(int mods);
+	void onArrowDown(int mods);
+	void onArrowLeft(int mods);
+	void onArrowRight(int mods);
+	void onMouseMove(float deltaX, float deltaY);
 
 	
 private:

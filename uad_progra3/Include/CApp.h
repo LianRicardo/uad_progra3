@@ -29,7 +29,7 @@ private:
 	bool isWindowInitialized() const;  // Is the CGameWindow object initialized ?
 	
 protected:
-	CCamera * const getcamara();
+	//CCamera         * const getcamara();
 	CGameWindow     * const getGameWindow()     const { return m_Window; }
 	CGameMenu       * const getMenu()           const { return m_Menu; }
 	COpenGLRenderer * const getOpenGLRenderer() const { return m_OpenGLRenderer; }
@@ -39,7 +39,7 @@ public:
 	CApp();
 	CApp(int window_width, int window_height);
 	virtual ~CApp();
-
+	virtual void inicialized() = 0;
 	bool canRun() const;                                  // Can the app run?
 	bool isMenuActive() const;                            // Is the menu active?
 	void setMenuActive(bool active);                      // Activate/deactivate the menu

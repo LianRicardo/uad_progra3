@@ -71,6 +71,28 @@ CVector3 CVector3::operator-(const CVector3 & other)
 	return res;
 }
 
+CVector3 CVector3::operator+(const CVector3 & other)
+{
+	CVector3 res;
+	res.setValues(
+		this->getX() + other.getX(),
+		this->getY() + other.getY(),
+		this->getZ() + other.getZ()
+	);
+	return res;
+}
+
+CVector3 CVector3::operator/(float f)
+{
+	CVector3 res;
+	res.setValues(
+		this->getX() / f,
+		this->getY() / f,
+		this->getZ() / f
+	);
+	return res;
+}
+
 /*
 */
 CVector3::~CVector3()
