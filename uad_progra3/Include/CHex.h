@@ -4,35 +4,29 @@
 #include "CVector3.h"
 #include "CLoger.h"
 #include <iostream>
+#include <math.h>
 
 class CHex
 {
-	CVector3 v[6];
-	CVector3 center;
-	CVector3 pos;
-	const float size = 1.0f;
-	const float radius = 0.866025f;
-	float altura;
-	float ancho;
+	//float altura;
+	//float ancho;
 	void set(CVector3 center, CVector3 pos, CVector3 v[6]);
 public:
-	CVector3 getcenter(CVector3 centerx, CVector3 centery, CVector3 center)
-	{
-		centerx = v[5] + ((v[5] + v[1]) / 2);
-		centery = v[4] + ((v[4] + v[2]) / 2);
 
-		center.setValues(centerx.getX(), 0, centery.getZ());
-	}
-	void getvertex(CVector3 v[6], int x, int y)
+	CVector3 center;
+	CVector3 pos;
+	CVector3 v[6];
+	const float size = sqrt(3) / 2;
+	void inicializarhexcell(int id_x, int id_y)
 	{
-		v[0].setValues(x + (size / 2), 0, y - radius);
-	    v[1].setValues(x + size, 0, y);
-	    v[2].setValues(x + (size / 2), 0, y + radius);
-	    v[3].setValues(x - (size / 2), 0, y + radius);
-	    v[4].setValues(x - size, 0, y);
-	    v[5].setValues(x - (size / 2), 0, y - radius);
+		v[0].setValues(id_x - size, 0, id_y);
+		v[1].setValues(id_x - (size / 2), 0, id_y + 0.5);
+		v[2].setValues(id_x + (size / 2), 0, id_y + 0.5);
+		v[3].setValues(id_x + size, 0, id_y);
+		v[4].setValues(id_x + (size/2), 0, id_y - 0.5);
+		v[5].setValues(id_x - (size / 2), 0, id_y - 0.5);
+		center.setValues(id_x*(sqrt(3) / 2), 0, id_y - (id_y % 2 != 0) ? 0.5 : 0);
 	}
 	CHex::CHex();
-	CHex(float x, float y);
 	~CHex();
 };

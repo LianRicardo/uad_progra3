@@ -1,26 +1,8 @@
 #include "..\Include\CHex.h"
 
-
-CHex::CHex(float x, float y)
-{
-	Log << "constructor de la celda. \n";
-	v[0].setValues(x + (size / 2), 0, y - radius);
-	v[1].setValues(x + size, 0, y);
-	v[2].setValues(x + (size / 2), 0, y + radius);
-	v[3].setValues(x - (size / 2), 0, y + radius);
-	v[4].setValues(x - size, 0, y);
-	v[5].setValues(x - (size / 2), 0, y - radius);
-
-	pos.setValues(x, 0, y );
-
-	/*centerx = v[5] + ((v[5] + v[1]) / 2);
-	centery= v[4] + ((v[4] + v[2]) / 2);
-	
-	center.setValues(centerx.getX(), 0, centery.getZ());*/
-}
 CHex::CHex()
 {
-
+	Log << "constructor de la celda";
 }
 CHex::~CHex()
 {
@@ -34,6 +16,8 @@ CHex::~CHex()
 	v[4] = { 0,0,0 };
 	v[5] = { 0,0,0 };
 }
+
+
 
 void CHex::set(CVector3 center, CVector3 pos, CVector3 v[6])
 {
