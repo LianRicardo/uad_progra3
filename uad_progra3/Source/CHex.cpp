@@ -1,6 +1,6 @@
 #include "..\Include\CHex.h"
 
-CHex::CHex()
+CHex::CHex(int i, int j)
 {
 	Log << "constructor de la celda";
 }

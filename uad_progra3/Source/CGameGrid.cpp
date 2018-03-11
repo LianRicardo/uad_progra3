@@ -7,6 +7,7 @@ void CGameGrid::inicializar()
 	{
 		for (int j = 0; j < 100; j++)
 		{
+			grid[i][j] = new CHex(i, j);
 			grid[i][j].inicializarhexcell(i, j);
 
 			//inicializar vertices
@@ -30,10 +31,5 @@ void CGameGrid::inicializar()
 			n_vertex += 6;
 		}
 	}
+	//allocateGraphicsMemoryForObject(0,trig_id,trigraw,n_vertex,trig_id,n_trigs);
 }
-
-/*allocateGraphicsMemoryForObject(
-const unsigned int * const shaderProgramId,
-unsigned int *vertexArrayObjectID,
-GLfloat *vertices, int numVertices,
-unsigned short *indicesVertices, int numIndicesVert)*/
