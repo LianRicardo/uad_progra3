@@ -1,8 +1,8 @@
 #include "..\Include\CHex.h"
 
-CHex::CHex(int i, int j)
+CHex::CHex()
 {
-	Log << "constructor de la celda";
+	Log << "constructor de la matrix. \n";
 }
 CHex::~CHex()
 {

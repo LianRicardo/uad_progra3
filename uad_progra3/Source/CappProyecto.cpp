@@ -197,6 +197,7 @@ bool CappProyecto::initializeMenu()
 	}
 
 	return false;*/
+    return true;
 }
 
 void CappProyecto::update(double deltaTime)
@@ -230,6 +231,51 @@ void CappProyecto::update(double deltaTime)
 
 void CappProyecto::render()
 {
+	if(inicialize())
+	{
+		float color[3] = { 0.95f, 0.95f, 0.95f };
+		double totalDegreesRotatedRadians = 0 * 3.1459 / 180.0;
 
+		CVector3 zero = { 0,0,0 };
+		MathHelper::Matrix4 modelMatrix = MathHelper::ModelMatrix((float)totalDegreesRotatedRadians, zero);
+
+		size_t ID = 0;
+		r->renderWireframeObject(0, 0,getn_vertexindex(), color, &modelMatrix);
+	}
+	else Log << "error en la matriz" << endl;
+}
+
+bool CappProyecto::inicialize()
+{
+	p->inicializar();
+
+	if (p->grid==NULL)
+	{
+		return false;
+	}
+	else
+	{
+		r->allocateGraphicsMemoryForObject(0, 0,getvertex(), getn_vertex(), getvertexindex(), getn_vertexindex());
+		return true;
+	}
+
+	
+}
+
+float* CappProyecto::getvertex()
+{
+	return &(p->vindexpos.data);
+}
+size_t CappProyecto::getn_vertex()
+{
+	return p->vindexpos.size();
+}
+unsigned short* CappProyecto::getvertexindex()
+{
+	return &(p->vindex.data);
+}
+size_t CappProyecto::getn_vertexindex()
+{
+	return p->vindex.size();
 }
 

@@ -1199,7 +1199,7 @@ void COpenGLRenderer::deleteTexture(unsigned int *id)
 
 /*
 */
-/*void COpenGLRenderer::drawString(unsigned int *textureObjectId, std::string &text, float x, float y, CVector3 &color)
+void COpenGLRenderer::drawString(unsigned int *textureObjectId, std::string &text, float x, float y, CVector3 &color)
 {
 	// TO-DO
-}*/
+}

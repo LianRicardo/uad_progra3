@@ -283,6 +283,7 @@ void CAppParcial2::render()
 
 			// No model loaded, show test cube
 			getOpenGLRenderer()->renderTestObject(&modelMatrix);
+			
 		}
 	}
 }

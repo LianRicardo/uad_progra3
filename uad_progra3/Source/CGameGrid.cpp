@@ -1,35 +1,40 @@
 #include "..\Include\CGameGrid.h"
 #include "..\Include\COpenGLRenderer.h"
 
-void CGameGrid::inicializar()
+bool CGameGrid::inicializar()
 {
 	for (int i = 0; i < 100; i++)
 	{
 		for (int j = 0; j < 100; j++)
 		{
-			grid[i][j] = new CHex(i, j);
+			grid[i][j] = new CHex();
 			grid[i][j].inicializarhexcell(i, j);
+		
+
 
 			//inicializar vertices
 			for (int k = 0; k < 6; k++)
 			{
-				trigraw.push_back(grid[i][j].v[k].getX());
-				trigraw.push_back(grid[i][j].v[k].getY());
-				trigraw.push_back(grid[i][j].v[k].getZ());
+				vindexpos.push_back(grid[i][j].v[k].getX());
+				vindexpos.push_back(grid[i][j].v[k].getY());
+				vindexpos.push_back(grid[i][j].v[k].getZ());
 			}
 
 			//CALCULAR INDICES 
 
 			for (int l = 0; l < 4; l++)
 			{
-				trig_id.push_back(i * 100 * 6 * 3 + j * 6 * 3);
-				trig_id.push_back(i * 100 * 6 * 3 + j * 6 * 3 + l + 1);
-				trig_id.push_back(i * 100 * 6 * 3 + j * 6 * 3 + l + 2);
+				vindex.push_back(i * 100 * 6 * 3 + j * 6 * 3);
+				vindex.push_back(i * 100 * 6 * 3 + j * 6 * 3 + l + 1);
+				vindex.push_back(i * 100 * 6 * 3 + j * 6 * 3 + l + 2);
 			}
 
-			n_trigs += 4;
-			n_vertex += 6;
+			//n_trigs += 4;
+			//n_vertex += 6;
 		}
+		return true;
 	}
 	//allocateGraphicsMemoryForObject(0,trig_id,trigraw,n_vertex,trig_id,n_trigs);
 }
+
+

@@ -20,12 +20,14 @@ private:
 public:
 	CGameGrid * p;
 	bool inicialize();
+	COpenGLRenderer * r;
 	CappProyecto();
 	~CappProyecto();
 	virtual void update(double delta_time);
 	virtual void run();
 	virtual void render();
 	virtual bool initializeMenu();
+	size_t id = 0;
 	// Pointer to an object of type C3DModel
 	C3DModel *m_p3DModel;
 
@@ -42,4 +44,10 @@ public:
 	double m_rotationSpeed;
 	
 	virtual void onMouse(float deltaX, float deltaY);
+
+public:
+	float* getvertex();
+	size_t getn_vertex();
+	unsigned short* getvertexindex();
+	size_t getn_vertexindex();
 };

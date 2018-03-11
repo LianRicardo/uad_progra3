@@ -8,10 +8,12 @@ using namespace std;
 
 class CGameGrid
 {
+public:
 	CHex grid[100][100];
-	std::vector<size_t> trig_id;
-	std::vector<float> trigraw;
-	int n_trigs = 0;
-	int n_vertex = 0;
-	void inicializar();
+	std::vector<unsigned short> vindex;
+	std::vector<float> vindexpos;
+	//int n_index = 0;
+	//int n_vertex = 0;
+	bool inicializar();
+
 };
