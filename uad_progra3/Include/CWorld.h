@@ -4,7 +4,11 @@
 
 class CWorld
 {
-private:
+public:
 	void save();
 	void load();
+	CWorld();
+	~CWorld();
+	CGameGrid gamegrid;
+	
 };

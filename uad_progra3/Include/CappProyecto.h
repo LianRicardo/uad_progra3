@@ -18,11 +18,11 @@ private:
 	CWorld myWorld;
 
 public:
+	CappProyecto();
+	~CappProyecto();
 	CGameGrid * p;
 	bool inicialize();
 	COpenGLRenderer * r;
-	CappProyecto();
-	~CappProyecto();
 	virtual void update(double delta_time);
 	virtual void run();
 	virtual void render();
@@ -50,4 +50,5 @@ public:
 	size_t getn_vertex();
 	unsigned short* getvertexindex();
 	size_t getn_vertexindex();
+
 };

@@ -18,7 +18,7 @@ CappProyecto::CappProyecto()
 
 CappProyecto::~CappProyecto()
 {
-
+	Log << "Destructor: ~CappProyecto()" << endl;
 }
 
 void CappProyecto::onMouse(float deltaX, float deltaY)
@@ -33,7 +33,7 @@ void CappProyecto::onMouse(float deltaX, float deltaY)
 
 void CappProyecto::run()
 {
-	/*// Check if CGameWindow object and window library been initialized
+	// Check if CGameWindow object and window library been initialized
 	if (canRun())
 	{
 		// Create the Window 
@@ -57,12 +57,12 @@ void CappProyecto::run()
 			Log << "Entering Main loop" << endl;
 			getGameWindow()->mainLoop(this);
 		}
-	}*/
+	}
 }
 
 bool CappProyecto::initializeMenu()
 {
-	/*Log << "CAppParcial2::initializeMenu()" << endl;
+	Log << "CAppParcial2::initializeMenu()" << endl;
 
 	if (getMenu() != NULL)
 	{
@@ -196,13 +196,13 @@ bool CappProyecto::initializeMenu()
 		return true;
 	}
 
-	return false;*/
+	return false;
     return true;
 }
 
 void CappProyecto::update(double deltaTime)
 {
-	/*double degreesToRotate = 0.0;
+	double degreesToRotate = 0.0;
 
 	if (deltaTime <= 0.0f)
 	{
@@ -226,7 +226,7 @@ void CappProyecto::update(double deltaTime)
 	if (m_objectRotation < 0.0)
 	{
 		m_objectRotation -= 0.0;
-	}*/
+	}
 }
 
 void CappProyecto::render()
