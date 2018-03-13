@@ -19,6 +19,7 @@ CappProyecto::CappProyecto()
 CappProyecto::~CappProyecto()
 {
 	Log << "Destructor: ~CappProyecto()" << endl;
+	r->freeGraphicsMemoryForObject(&(pgrid->shaderid), myWorld.getvertexindex());
 }
 
 void CappProyecto::onMouse(float deltaX, float deltaY)
@@ -202,7 +203,7 @@ bool CappProyecto::initializeMenu()
 
 void CappProyecto::update(double deltaTime)
 {
-	double degreesToRotate = 0.0;
+	/*double degreesToRotate = 0.0;
 
 	if (deltaTime <= 0.0f)
 	{
@@ -226,56 +227,22 @@ void CappProyecto::update(double deltaTime)
 	if (m_objectRotation < 0.0)
 	{
 		m_objectRotation -= 0.0;
-	}
+	}*/
 }
 
 void CappProyecto::render()
 {
-	if(inicialize())
-	{
-		float color[3] = { 0.95f, 0.95f, 0.95f };
-		double totalDegreesRotatedRadians = 0 * 3.1459 / 180.0;
-
-		CVector3 zero = { 0,0,0 };
-		MathHelper::Matrix4 modelMatrix = MathHelper::ModelMatrix((float)totalDegreesRotatedRadians, zero);
-
-		size_t ID = 0;
-		r->renderWireframeObject(0, 0,getn_vertexindex(), color, &modelMatrix);
-	}
-	else Log << "error en la matriz" << endl;
+	myWorld.render();
 }
 
 bool CappProyecto::inicialize()
 {
-	p->inicializar();
-
-	if (p->grid==NULL)
+	if (myWorld.init())
 	{
-		return false;
-	}
-	else
-	{
-		r->allocateGraphicsMemoryForObject(0, 0,getvertex(), getn_vertex(), getvertexindex(), getn_vertexindex());
 		return true;
 	}
-
-	
+	else return false;
 }
 
-float* CappProyecto::getvertex()
-{
-	return &(p->vindexpos.data);
-}
-size_t CappProyecto::getn_vertex()
-{
-	return p->vindexpos.size();
-}
-unsigned short* CappProyecto::getvertexindex()
-{
-	return &(p->vindex.data);
-}
-size_t CappProyecto::getn_vertexindex()
-{
-	return p->vindex.size();
-}
+
 

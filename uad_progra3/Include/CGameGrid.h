@@ -9,6 +9,8 @@ using namespace std;
 class CGameGrid
 {
 public:
+	unsigned int shaderid;
+	unsigned int shaderid1;
 	CHex grid[100][100];
 	std::vector<unsigned short> vindex;
 	std::vector<float> vindexpos;

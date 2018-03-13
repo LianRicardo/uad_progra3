@@ -122,7 +122,7 @@
     <Link>
       <SubSystem>Console</SubSystem>
       <GenerateDebugInformation>true</GenerateDebugInformation>
-      <AdditionalDependencies>opengl32.lib;glu32.lib;glfw3.lib;SDL2.lib;SDL2main.lib;SDL2test.lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <AdditionalDependencies>opengl32.lib;glu32.lib;glfw3.lib;SDL2.lib;SDL2main.lib;SDL2test.lib;shlwapi.lib;%(AdditionalDependencies)</AdditionalDependencies>
     </Link>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
@@ -189,7 +189,6 @@
     <ClInclude Include="Include\CVector3.h" />
     <ClInclude Include="Include\CWideStringHelper.h" />
     <ClInclude Include="Include\CWorld.h" />
-    <ClInclude Include="Include\CWorldObject.h" />
     <ClInclude Include="Include\Globals.h" />
     <ClInclude Include="Include\LoadShaders.h" />
     <ClInclude Include="Include\LoadTGA.h" />
@@ -222,7 +221,6 @@
     <ClCompile Include="Source\COpenGLRenderer.cpp" />
     <ClCompile Include="Source\CVector3.cpp" />
     <ClCompile Include="Source\CWorld.cpp" />
-    <ClCompile Include="Source\CWorldObjectcpp.cpp" />
     <ClCompile Include="Source\LoadShaders.cpp" />
     <ClCompile Include="Source\LoadTGA.cpp" />
     <ClCompile Include="uad_progra3.cpp" />

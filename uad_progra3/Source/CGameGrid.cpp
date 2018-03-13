@@ -7,11 +7,8 @@ bool CGameGrid::inicializar()
 	{
 		for (int j = 0; j < 100; j++)
 		{
-			grid[i][j] = new CHex();
+			//grid[i][j] = new CHex();
 			grid[i][j].inicializarhexcell(i, j);
-		
-
-
 			//inicializar vertices
 			for (int k = 0; k < 6; k++)
 			{

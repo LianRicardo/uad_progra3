@@ -8,11 +8,8 @@
 
 class CHex
 {
-	//float altura;
-	//float ancho;
 	void set(CVector3 center, CVector3 pos, CVector3 v[6]);
 public:
-
 	CVector3 center;
 	CVector3 pos;
 	CVector3 v[6];

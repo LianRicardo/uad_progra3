@@ -99,9 +99,6 @@
     <ClInclude Include="Include\CWorld.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="Include\CWorldObject.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
     <ClInclude Include="Include\CWideStringHelper.h">
       <Filter>Header Files</Filter>
     </ClInclude>
@@ -177,9 +174,6 @@
       <Filter>Source Files</Filter>
     </ClCompile>
     <ClCompile Include="Source\CGameGrid.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="Source\CWorldObjectcpp.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
   </ItemGroup>
