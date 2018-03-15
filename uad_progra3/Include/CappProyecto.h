@@ -26,6 +26,7 @@ public:
 	~CappProyecto();
 	CGameGrid * pgrid;
 	bool inicialize();
+	void inicialized();
 	COpenGLRenderer * r;
 	void update(double delta_time);
 	void run();

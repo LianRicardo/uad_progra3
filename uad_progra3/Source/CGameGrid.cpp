@@ -31,7 +31,6 @@ bool CGameGrid::inicializar()
 		}
 		return true;
 	}
-	//allocateGraphicsMemoryForObject(0,trig_id,trigraw,n_vertex,trig_id,n_trigs);
 }
 
 

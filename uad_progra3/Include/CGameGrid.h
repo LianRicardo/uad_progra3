@@ -10,7 +10,7 @@ class CGameGrid
 {
 public:
 	unsigned int shaderid;
-	unsigned int shaderid1;
+	unsigned int vaoID;
 	CHex grid[100][100];
 	std::vector<unsigned short> vindex;
 	std::vector<float> vindexpos;

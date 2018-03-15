@@ -20,7 +20,7 @@ void CWorld::render()
 		CVector3 zero = { 0,0,0 };
 		MathHelper::Matrix4 modelMatrix = MathHelper::ModelMatrix((float)totalDegreesRotatedRadians, zero);
 		size_t ID = 0;
-		r->renderWireframeObject(&(gamegrid.shaderid),&(gamegrid.shaderid1), getn_vertexindex(), color, &modelMatrix);
+		r->renderWireframeObject(&(gamegrid.shaderid),&(gamegrid.vaoID), getn_vertexindex(), color, &modelMatrix);
 	}
 	else Log << "error en la matriz" << endl;
 }
@@ -34,7 +34,7 @@ bool CWorld::init()
 	}
 	else
 	{
-		r->allocateGraphicsMemoryForObject(&(gamegrid.shaderid), &(gamegrid.shaderid1),getvertex(),getn_vertex(),getvertexindex(),getn_vertexindex());
+		r->allocateGraphicsMemoryForObject(&(gamegrid.shaderid), &(gamegrid.vaoID),getvertex(),getn_vertex(),getvertexindex(),getn_vertexindex());
 		return true;
 	}
 }

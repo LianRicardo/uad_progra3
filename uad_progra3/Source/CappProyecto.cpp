@@ -19,7 +19,7 @@ CappProyecto::CappProyecto()
 CappProyecto::~CappProyecto()
 {
 	Log << "Destructor: ~CappProyecto()" << endl;
-	r->freeGraphicsMemoryForObject(&(pgrid->shaderid), myWorld.getvertexindex());
+	r->freeGraphicsMemoryForObject(&pgrid->shaderid, &pgrid->vaoID);
 }
 
 void CappProyecto::onMouse(float deltaX, float deltaY)
@@ -237,11 +237,17 @@ void CappProyecto::render()
 
 bool CappProyecto::inicialize()
 {
+	r->createShaderProgram(&(pgrid->shaderid), VERTEX_SHADER_MENU, FRAGMENT_SHADER_MENU);
 	if (myWorld.init())
 	{
 		return true;
 	}
 	else return false;
+}
+
+void CappProyecto::inicialized()
+{
+
 }
 
 
