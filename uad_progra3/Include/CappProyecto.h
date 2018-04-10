@@ -18,16 +18,12 @@ private:
 	CWorld myWorld;
 public:
 	CappProyecto();
-	CappProyecto(int window_width, int window_height):CApp(window_width, window_height)
-	{
-		Log << "constructor prron" << endl;
-	}
+	CappProyecto(int window_width, int window_height);
 	
 	~CappProyecto();
 	CGameGrid * pgrid;
 	bool inicialize();
 	void inicialized();
-	COpenGLRenderer * r;
 	void update(double delta_time);
 	void run();
 	void render();   //esta funcion tiene que mandar a llamar a la funcion de world render que adentro debe hacer el render del grid y mandar a llamar a renderwireframeobj

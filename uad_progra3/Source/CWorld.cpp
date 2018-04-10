@@ -1,8 +1,13 @@
 #include "..\Include\CWorld.h"
 
+CWorld::CWorld(COpenGLRenderer *r) : r(r)
+{
+	
+}
+
 CWorld::CWorld()
 {
-
+	inicializado = false;
 }
 
 CWorld::~CWorld()
@@ -19,7 +24,7 @@ void CWorld::render()
 		double totalDegreesRotatedRadians = 0 * 3.1459 / 180.0;
 		CVector3 zero = { 0,0,0 };
 		MathHelper::Matrix4 modelMatrix = MathHelper::ModelMatrix((float)totalDegreesRotatedRadians, zero);
-		size_t ID = 0;
+		//size_t ID = 0;
 		r->renderWireframeObject(&(gamegrid.shaderid),&(gamegrid.vaoID), getn_vertexindex(), color, &modelMatrix);
 	}
 	else Log << "error en la matriz" << endl;
@@ -30,6 +35,7 @@ bool CWorld::init()
 	gamegrid.inicializar();
 	if (gamegrid.grid == NULL)
 	{
+		cout << "error en el mundo wtfffff" << endl;
 		return false;
 	}
 	else

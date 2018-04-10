@@ -51,9 +51,6 @@
     <ClInclude Include="Include\LoadTGA.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="Include\MathHelper.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
     <ClInclude Include="Include\C3DModel_fbx.h">
       <Filter>Header Files</Filter>
     </ClInclude>
@@ -100,6 +97,9 @@
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="Include\CWideStringHelper.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="Include\MathHelper.h">
       <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>

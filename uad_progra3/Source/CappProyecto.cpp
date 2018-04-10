@@ -16,10 +16,20 @@ CappProyecto::CappProyecto()
 	Log << "CAppProyecto3" << endl;
 }
 
+CappProyecto::CappProyecto(int window_width, int window_height) : CApp(window_width, window_height)
+{
+	Log << "constructor prron" << endl;
+	inicialize();
+	if (inicialize() == false)
+	{
+		cout << "error en la concha de la lora" << endl;
+	}
+}
+
 CappProyecto::~CappProyecto()
 {
 	Log << "Destructor: ~CappProyecto()" << endl;
-	r->freeGraphicsMemoryForObject(&pgrid->shaderid, &pgrid->vaoID);
+	getOpenGLRenderer()->freeGraphicsMemoryForObject(&pgrid->shaderid, &pgrid->vaoID);
 }
 
 void CappProyecto::onMouse(float deltaX, float deltaY)
@@ -46,7 +56,7 @@ void CappProyecto::run()
 			getOpenGLRenderer()->setWindowWidth(getGameWindow()->getWidth());
 			getOpenGLRenderer()->setWindowHeight(getGameWindow()->getHeight());
 			// Initialize a test cube
-			getOpenGLRenderer()->initializeTestObjects();
+			//getOpenGLRenderer()->initializeTestObjects();
 
 			// Create our menu (add all menu items)
 			if (!initializeMenu())
@@ -237,7 +247,8 @@ void CappProyecto::render()
 
 bool CappProyecto::inicialize()
 {
-	r->createShaderProgram(&(pgrid->shaderid), VERTEX_SHADER_MENU, FRAGMENT_SHADER_MENU);
+	getOpenGLRenderer()->createShaderProgram(&(pgrid->shaderid), VERTEX_SHADER_MENU, FRAGMENT_SHADER_MENU);
+	myWorld.init();
 	if (myWorld.init())
 	{
 		return true;

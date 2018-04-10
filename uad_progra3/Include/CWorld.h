@@ -3,17 +3,21 @@
 #include "CGameGrid.h"
 #include "COpenGLRenderer.h"
 #include "CHex.h"
+#include "CApp.h"
 
 class CWorld
 {
 private:
 	void save();
 	void load();
+
 public:
+	bool inicializado;
 	CGameGrid gamegrid;
-	COpenGLRenderer* r;
+	COpenGLRenderer * const r;
 	void render();
 	bool init();
+	CWorld(COpenGLRenderer *r);
 	CWorld();
 	~CWorld();
 	float* getvertex();
