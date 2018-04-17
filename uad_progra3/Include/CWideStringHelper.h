@@ -6,7 +6,6 @@
 #include <Shlwapi.h>
 #include <iostream>
 #include <vector>
-#include"CLoger.h"
 using namespace std;
 
 class CWideStringHelper
@@ -188,7 +187,7 @@ public:
 
 		if (numWideCharsNeeded == 0)
 		{
-			Log << "Failed converting UTF-8 string to UTF-16" << endl;
+			cout << "Failed converting UTF-8 string to UTF-16" << endl;
 			return nullptr;
 		}
 
@@ -204,7 +203,7 @@ public:
 		if (numCharsConverted == 0 ||
 			numWideCharsNeeded != numCharsConverted)
 		{
-			Log << "Failed converting UTF-8 string to UTF-16" << endl;
+			cout << "Failed converting UTF-8 string to UTF-16" << endl;
 			return nullptr;
 		}
 
@@ -239,7 +238,7 @@ public:
 
 		if (numCharsNeeded == 0)
 		{
-			Log << "Failed converting UTF-16 string to UTF-8" << endl;
+			cout << "Failed converting UTF-16 string to UTF-8" << endl;
 			return nullptr;
 		}
 
@@ -257,7 +256,7 @@ public:
 		if (numCharsConverted == 0 ||
 			numCharsNeeded != numCharsConverted)
 		{
-			Log << "Failed converting UTF-16 string to UTF-8" << endl;
+			cout << "Failed converting UTF-16 string to UTF-8" << endl;
 			return nullptr;
 		}
 

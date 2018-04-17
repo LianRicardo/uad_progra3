@@ -15,7 +15,7 @@
 class CappProyecto : public CApp
 {
 private:
-	CWorld myWorld;
+	CWorld *myWorld;
 public:
 	CappProyecto();
 	CappProyecto(int window_width, int window_height);

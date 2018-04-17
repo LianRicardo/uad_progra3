@@ -29,8 +29,8 @@ bool CGameGrid::inicializar()
 			//n_trigs += 4;
 			//n_vertex += 6;
 		}
-		return true;
 	}
+	return true;
 }
 
 

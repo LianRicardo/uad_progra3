@@ -9,21 +9,20 @@
 #include <string>
 #include <wchar.h>
 #include <Windows.h>
+#include <CWideStringHelper.h>
 
 
 CappProyecto::CappProyecto()
 {
 	Log << "CAppProyecto3" << endl;
+	myWorld = new CWorld(getOpenGLRenderer());
 }
 
-CappProyecto::CappProyecto(int window_width, int window_height) : CApp(window_width, window_height)
+CappProyecto::CappProyecto(int window_width, int window_height) : 
+	CApp(window_width, window_height)
 {
 	Log << "constructor prron" << endl;
-	inicialize();
-	if (inicialize() == false)
-	{
-		cout << "error en la concha de la lora" << endl;
-	}
+	myWorld = new CWorld(getOpenGLRenderer());
 }
 
 CappProyecto::~CappProyecto()
@@ -50,6 +49,14 @@ void CappProyecto::run()
 		// Create the Window 
 		if (getGameWindow()->create(CAPPPARCIAL2_WINDOW_TITLE))
 		{
+			if(!myWorld->inicializado)
+			{
+				if (inicialize() == false)
+				{
+					cout << "error en la concha de la lora" << endl;
+				}
+			}
+
 			// Set initial clear screen color
 			getOpenGLRenderer()->setClearScreenColor(0.15f, 0.75f, 0.75f);
 			// Initialize window width/height in the renderer
@@ -75,6 +82,25 @@ bool CappProyecto::initializeMenu()
 {
 	Log << "CAppParcial2::initializeMenu()" << endl;
 
+	std::wstring wresourceFilenameVS;
+	std::wstring wresourceFilenameFS;
+	std::wstring wresourceFilenameTexture;
+	std::string resourceFilenameVS;
+	std::string resourceFilenameFS;
+	std::string resourceFilenameTexture;
+
+	// If resource files cannot be found, return
+	if (!CWideStringHelper::GetResourceFullPath(VERTEX_SHADER_MENU, wresourceFilenameVS, resourceFilenameVS) ||
+		!CWideStringHelper::GetResourceFullPath(FRAGMENT_SHADER_MENU, wresourceFilenameFS, resourceFilenameFS) ||
+		!CWideStringHelper::GetResourceFullPath(MENU_TEXTURE_FILE, wresourceFilenameTexture, resourceFilenameTexture))
+	{
+		cout << "ERROR: Unable to find one or more resources: " << endl;
+		cout << "  " << VERTEX_SHADER_MENU << endl;
+		cout << "  " << FRAGMENT_SHADER_MENU << endl;
+		cout << "  " << MENU_TEXTURE_FILE << endl;
+		return false;
+	}
+
 	if (getMenu() != NULL)
 	{
 		CGameMenu *const menu = getMenu();
@@ -93,8 +119,8 @@ bool CappProyecto::initializeMenu()
 		// Create a shader program to use for the menu
 		if (!getOpenGLRenderer()->createShaderProgram(
 			&menuShaderProgramId,
-			VERTEX_SHADER_MENU,
-			FRAGMENT_SHADER_MENU))
+			resourceFilenameVS.c_str(),
+			resourceFilenameFS.c_str()))
 		{
 			return false;
 		}
@@ -242,14 +268,12 @@ void CappProyecto::update(double deltaTime)
 
 void CappProyecto::render()
 {
-	myWorld.render();
+	myWorld->render();
 }
 
 bool CappProyecto::inicialize()
 {
-	getOpenGLRenderer()->createShaderProgram(&(pgrid->shaderid), VERTEX_SHADER_MENU, FRAGMENT_SHADER_MENU);
-	myWorld.init();
-	if (myWorld.init())
+	if (myWorld->init())
 	{
 		return true;
 	}

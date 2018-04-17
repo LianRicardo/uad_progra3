@@ -10,6 +10,7 @@
 #include <string>
 #include <wchar.h>
 #include <Windows.h>
+#include "CWideStringHelper.h"
 using namespace std;
 
 
@@ -78,6 +79,25 @@ void CAppParcial2::run()
 bool CAppParcial2::initializeMenu()
 {
 	Log << "CAppParcial2::initializeMenu()" << endl;
+
+	std::wstring wresourceFilenameVS;
+	std::wstring wresourceFilenameFS;
+	std::wstring wresourceFilenameTexture;
+	std::string resourceFilenameVS;
+	std::string resourceFilenameFS;
+	std::string resourceFilenameTexture;
+
+	// If resource files cannot be found, return
+	if (!CWideStringHelper::GetResourceFullPath(VERTEX_SHADER_MENU, wresourceFilenameVS, resourceFilenameVS) ||
+		!CWideStringHelper::GetResourceFullPath(FRAGMENT_SHADER_MENU, wresourceFilenameFS, resourceFilenameFS) ||
+		!CWideStringHelper::GetResourceFullPath(MENU_TEXTURE_FILE, wresourceFilenameTexture, resourceFilenameTexture))
+	{
+		cout << "ERROR: Unable to find one or more resources: " << endl;
+		cout << "  " << VERTEX_SHADER_MENU << endl;
+		cout << "  " << FRAGMENT_SHADER_MENU << endl;
+		cout << "  " << MENU_TEXTURE_FILE << endl;
+		return false;
+	}
 
 	if (getMenu() != NULL)
 	{
