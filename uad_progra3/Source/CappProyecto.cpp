@@ -28,7 +28,6 @@ CappProyecto::CappProyecto(int window_width, int window_height) :
 CappProyecto::~CappProyecto()
 {
 	Log << "Destructor: ~CappProyecto()" << endl;
-	getOpenGLRenderer()->freeGraphicsMemoryForObject(&pgrid->shaderid, &pgrid->vaoID);
 }
 
 void CappProyecto::onMouse(float deltaX, float deltaY)
@@ -131,7 +130,7 @@ bool CappProyecto::initializeMenu()
 		TGAFILE tgaFile;
 		tgaFile.imageData = NULL;
 
-		if (LoadTGAFile(MENU_TEXTURE_FILE, &tgaFile))
+		if (LoadTGAFile(resourceFilenameTexture.c_str(), &tgaFile))
 		{
 			if (tgaFile.imageData == NULL ||
 				tgaFile.imageHeight < 0 ||
@@ -268,6 +267,7 @@ void CappProyecto::update(double deltaTime)
 
 void CappProyecto::render()
 {
+	inicialize();
 	myWorld->render();
 }
 

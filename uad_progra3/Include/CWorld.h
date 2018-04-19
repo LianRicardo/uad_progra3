@@ -9,7 +9,7 @@ class CWorld
 private:
 	void save();
 	void load();
-
+	unsigned int sid;
 public:
 	bool inicializado;
 	CGameGrid *gamegrid;

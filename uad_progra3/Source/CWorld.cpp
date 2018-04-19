@@ -10,7 +10,7 @@ CWorld::CWorld(COpenGLRenderer *r) : r(r)
 
 CWorld::~CWorld()
 {
-	//gamegrid = NULL;
+	r->freeGraphicsMemoryForObject(&sid, &gamegrid->vaoID);
 	delete gamegrid;
 }
 
@@ -23,16 +23,16 @@ void CWorld::render()
 		CVector3 zero = { 0,0,0 };
 		MathHelper::Matrix4 modelMatrix = MathHelper::ModelMatrix((float)totalDegreesRotatedRadians, zero);
 		//size_t ID = 0;
-		r->renderWireframeObject(&(gamegrid->shaderid),&(gamegrid->vaoID), getn_vertexindex(), color, &modelMatrix);
+		r->renderWireframeObject(&(sid),&(gamegrid->vaoID), gamegrid->n_trigs, color, &modelMatrix);
 	}
 	else Log << "error en la matriz" << endl;
 }
 
 bool CWorld::init()
 {
+	gamegrid = new CGameGrid();
 	gamegrid->inicializar();
 	//COpenGLRenderer* r = getOpenGLRenderer();
-	unsigned int sid = gamegrid->shaderid;
 	std::wstring wresourceFilenameVS;
 	std::wstring wresourceFilenameFS;
 	std::wstring wresourceFilenameTexture;
@@ -41,14 +41,13 @@ bool CWorld::init()
 	std::string resourceFilenameTexture;
 
 	// If resource files cannot be found, return
-	if (!CWideStringHelper::GetResourceFullPath(VERTEX_SHADER_MENU, wresourceFilenameVS, resourceFilenameVS) ||
-		!CWideStringHelper::GetResourceFullPath(FRAGMENT_SHADER_MENU, wresourceFilenameFS, resourceFilenameFS) ||
-		!CWideStringHelper::GetResourceFullPath(MENU_TEXTURE_FILE, wresourceFilenameTexture, resourceFilenameTexture))
+	if (!CWideStringHelper::GetResourceFullPath(VERTEX_SHADER_WIREFRAME, wresourceFilenameVS, resourceFilenameVS) ||
+		!CWideStringHelper::GetResourceFullPath(FRAGMENT_SHADER_WIREFRAME, wresourceFilenameFS, resourceFilenameFS))
 	{
 		cout << "ERROR: Unable to find one or more resources: " << endl;
-		cout << "  " << VERTEX_SHADER_MENU << endl;
-		cout << "  " << FRAGMENT_SHADER_MENU << endl;
-		cout << "  " << MENU_TEXTURE_FILE << endl;
+		cout << "  " << VERTEX_SHADER_WIREFRAME << endl;
+		cout << "  " << FRAGMENT_SHADER_WIREFRAME << endl;
+		//cout << "  " << MENU_TEXTURE_FILE << endl;
 		return false;
 	}
 	r->createShaderProgram(&sid, resourceFilenameVS.c_str(), resourceFilenameFS.c_str());
@@ -61,7 +60,7 @@ bool CWorld::init()
 	}
 	else
 	{
-		r->allocateGraphicsMemoryForObject(&(gamegrid->shaderid), &(gamegrid->vaoID),getvertex(),getn_vertex(),getvertexindex(),getn_vertexindex());
+		r->allocateGraphicsMemoryForObject(&(sid), &(gamegrid->vaoID),getvertex(),getn_vertex(),getvertexindex(),getn_vertexindex());
 		inicializado = true;
 		return inicializado;
 	}

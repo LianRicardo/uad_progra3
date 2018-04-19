@@ -1,6 +1,11 @@
 #include "..\Include\CGameGrid.h"
 #include "..\Include\COpenGLRenderer.h"
 
+CGameGrid::CGameGrid()
+{
+	vaoID = 0;
+}
+
 bool CGameGrid::inicializar()
 {
 	for (int i = 0; i < 100; i++)
@@ -21,9 +26,9 @@ bool CGameGrid::inicializar()
 
 			for (int l = 0; l < 4; l++)
 			{
-				vindex.push_back(i * 100 * 6 * 3 + j * 6 * 3);
-				vindex.push_back(i * 100 * 6 * 3 + j * 6 * 3 + l + 1);
-				vindex.push_back(i * 100 * 6 * 3 + j * 6 * 3 + l + 2);
+				vindex.push_back(i * 100 * 6 + j * 6 );
+				vindex.push_back(i * 100 * 6 + j * 6 + l + 1);
+				vindex.push_back(i * 100 * 6 + j * 6 + l + 2);
 			}
 
 			//n_trigs += 4;
@@ -33,4 +38,10 @@ bool CGameGrid::inicializar()
 	return true;
 }
 
+int CGameGrid::returnn()
+{
+	int x;
+	x = 40000;
+	return x;
+}
 
