@@ -23,7 +23,7 @@ void CWorld::render()
 		CVector3 zero = { 0,0,0 };
 		MathHelper::Matrix4 modelMatrix = MathHelper::ModelMatrix((float)totalDegreesRotatedRadians, zero);
 		//size_t ID = 0;
-		r->renderWireframeObject(&(sid),&(gamegrid->vaoID), gamegrid->n_trigs, color, &modelMatrix);
+		r->renderWireframeObject(&(sid), &(gamegrid->vaoID), gamegrid->returnn(), color, &modelMatrix);
 	}
 	else Log << "error en la matriz" << endl;
 }
@@ -31,8 +31,7 @@ void CWorld::render()
 bool CWorld::init()
 {
 	gamegrid = new CGameGrid();
-	gamegrid->inicializar();
-	//COpenGLRenderer* r = getOpenGLRenderer();
+	//amegrid->inicializar;
 	std::wstring wresourceFilenameVS;
 	std::wstring wresourceFilenameFS;
 	std::wstring wresourceFilenameTexture;
@@ -80,7 +79,7 @@ unsigned short* CWorld::getvertexindex()
 }
 size_t CWorld::getn_vertexindex()
 {
-	return gamegrid->vindex.size();
+	return gamegrid->vindex.size()/3;
 }
 
 

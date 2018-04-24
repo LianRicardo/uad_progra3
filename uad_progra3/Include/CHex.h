@@ -22,7 +22,7 @@ public:
 		v[3].setValues(id_x + size, 0, id_y);
 		v[4].setValues(id_x + (size/2), 0, id_y - 0.5);
 		v[5].setValues(id_x - (size / 2), 0, id_y - 0.5);
-		center.setValues(id_x*(sqrt(3) / 2), 0, id_y - (id_y % 2 != 0) ? 0.5 : 0);
+		center.setValues(id_x * (size), 0, id_y - (id_y % 2 != 0) ? 0 : 0.5);
 	}
 	CHex();
 	~CHex();

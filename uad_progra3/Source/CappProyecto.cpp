@@ -50,29 +50,25 @@ void CappProyecto::run()
 		{
 			if(!myWorld->inicializado)
 			{
-				if (inicialize() == false)
+				myWorld->gamegrid->thread1 = CreateThread(nullptr, 0, myWorld->gamegrid->inicializar, this, 0, &myWorld->gamegrid->hextrhead_id);
+			}
+				// Set initial clear screen color
+				getOpenGLRenderer()->setClearScreenColor(0.15f, 0.75f, 0.75f);
+				// Initialize window width/height in the renderer
+				getOpenGLRenderer()->setWindowWidth(getGameWindow()->getWidth());
+				getOpenGLRenderer()->setWindowHeight(getGameWindow()->getHeight());
+				// Initialize a test cube
+				//inicialize();
+				getOpenGLRenderer()->initializeTestObjects();
+				
+				// Create our menu (add all menu items)
+				if (!initializeMenu())
 				{
-					cout << "error en la concha de la lora" << endl;
+					return;
 				}
-			}
-
-			// Set initial clear screen color
-			getOpenGLRenderer()->setClearScreenColor(0.15f, 0.75f, 0.75f);
-			// Initialize window width/height in the renderer
-			getOpenGLRenderer()->setWindowWidth(getGameWindow()->getWidth());
-			getOpenGLRenderer()->setWindowHeight(getGameWindow()->getHeight());
-			// Initialize a test cube
-			//getOpenGLRenderer()->initializeTestObjects();
-
-			// Create our menu (add all menu items)
-			if (!initializeMenu())
-			{
-				return;
-			}
-
-			// Enter main loop
-			Log << "Entering Main loop" << endl;
-			getGameWindow()->mainLoop(this);
+				// Enter main loop
+				Log << "Entering Main loop" << endl;
+				getGameWindow()->mainLoop(this);
 		}
 	}
 }
@@ -267,8 +263,22 @@ void CappProyecto::update(double deltaTime)
 
 void CappProyecto::render()
 {
-	inicialize();
-	myWorld->render();
+	DWORD stillactive;
+	GetExitCodeThread(myWorld->gamegrid->thread1, &stillactive);
+	if (stillactive == STILL_ACTIVE)
+	{
+		double totalDegreesRotatedRadians = 360 * 3.1459 / 180.0;
+
+		// Get a matrix that has both the object rotation and translation
+		CVector3 zero = { 0,0,0 };
+		MathHelper::Matrix4 modelMatrix = MathHelper::ModelMatrix((float)totalDegreesRotatedRadians, zero);
+		// No model loaded, show test cube
+		getOpenGLRenderer()->renderTestObject(&modelMatrix);
+	}
+	else
+	{
+		myWorld->render();
+	}
 }
 
 bool CappProyecto::inicialize()
