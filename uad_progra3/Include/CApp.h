@@ -29,7 +29,7 @@ private:
 	bool isWindowInitialized() const;  // Is the CGameWindow object initialized ?
 	
 protected:
-	//CCamera         * const getcamara();
+	CCamera         * const getcamara()         const { return m_camara; }
 	CGameWindow     * const getGameWindow()     const { return m_Window; }
 	CGameMenu       * const getMenu()           const { return m_Menu; }
 	COpenGLRenderer * const getOpenGLRenderer() const { return m_OpenGLRenderer; }
@@ -61,9 +61,7 @@ public:
 	virtual void onF9(int mods)  {}                       // F9
 	virtual void onF10(int mods) {}                       // F10
 	virtual void onF11(int mods) {}                       // F11
-
-	virtual void onMouseMove(float deltaX, float deltaY) {}
-
+	virtual void onMouse(float deltaX, float deltaY) {}
 	virtual void onArrowUp(int mods) {}
 	virtual void onArrowDown(int mods) {}
 	virtual void onArrowLeft(int mods) {}

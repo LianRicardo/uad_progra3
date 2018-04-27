@@ -1,11 +1,16 @@
 #include "..\Include\CWorld.h"
 #include "..\Include\Globals.h"
 #include <CWideStringHelper.h>
+#include <LoadTGA.h>
 
 CWorld::CWorld(COpenGLRenderer *r) : r(r)
 {
-	gamegrid = new CGameGrid();
+	qt = nullptr;
+	gamegrid = new CGameGrid(r);
 	inicializado = false;
+	m_TextureNames.resize(4);
+	m_TextureNames = { TEXTURE_GRID };
+	m_TexturesID = { 0,0,0,0 };
 }
 
 CWorld::~CWorld()
@@ -14,55 +19,88 @@ CWorld::~CWorld()
 	delete gamegrid;
 }
 
-void CWorld::render()
+void CWorld::render(CVector3 cpos)
 {
-	if (inicializado)
+	float color[3] = { 0.95f, 0.95f, 0.95f };
+	for (size_t i = 0; i < GRID_SIZE; i++)
 	{
-		float color[3] = { 0.95f, 0.95f, 0.95f };
-		double totalDegreesRotatedRadians = 0 * 3.1459 / 180.0;
-		CVector3 zero = { 0,0,0 };
-		MathHelper::Matrix4 modelMatrix = MathHelper::ModelMatrix((float)totalDegreesRotatedRadians, zero);
-		//size_t ID = 0;
-		r->renderWireframeObject(&(sid), &(gamegrid->vaoID), gamegrid->returnn(), color, &modelMatrix);
+		for (size_t j = 0; j < GRID_SIZE; j++)
+		{
+
+			float x, y, z;
+			x = gamegrid->getCenter(i, j).getX() + cpos.getX();
+			y = gamegrid->getCenter(i, j).getY() + cpos.getY();
+			z = gamegrid->getCenter(i, j).getZ() + cpos.getZ();
+			MathHelper::Matrix4 modelMatrix = MathHelper::ModelMatrix((float)0, CVector3(x, y, z));
+
+			r->renderMCCube(&modelMatrix);
+		}
 	}
-	else Log << "error en la matriz" << endl;
 }
 
 bool CWorld::init()
 {
-	gamegrid = new CGameGrid();
-	//amegrid->inicializar;
-	std::wstring wresourceFilenameVS;
-	std::wstring wresourceFilenameFS;
-	std::wstring wresourceFilenameTexture;
-	std::string resourceFilenameVS;
-	std::string resourceFilenameFS;
-	std::string resourceFilenameTexture;
+	gamegrid = new CGameGrid(r);
+	gamegrid->inicializar();
+	for (int i = 0; i < 4; i++)
+	{
+		std::wstring wresourceFiletexture;
+		std::string resourceFileTexture;
+		// If resource files cannot be found, return
+		if (!CWideStringHelper::GetResourceFullPath(m_TextureNames[i].c_str(), wresourceFiletexture, resourceFileTexture))
+		{
+			Log << "ERROR: Unable to find one or more resource textures: " << endl;
+		}
+		TGAFILE tgaFile;
+		tgaFile.imageData = NULL;
+		unsigned int mc = -1;
+		if (LoadTGAFile(resourceFileTexture.c_str(), &tgaFile))
+		{
+			if (tgaFile.imageData == NULL ||
+				tgaFile.imageHeight < 0 ||
+				tgaFile.imageWidth < 0)
+			{
+				if (tgaFile.imageData != NULL)
+				{
+					delete[] tgaFile.imageData;
+				}
+				return false;
+			}
 
-	// If resource files cannot be found, return
-	if (!CWideStringHelper::GetResourceFullPath(VERTEX_SHADER_WIREFRAME, wresourceFilenameVS, resourceFilenameVS) ||
-		!CWideStringHelper::GetResourceFullPath(FRAGMENT_SHADER_WIREFRAME, wresourceFilenameFS, resourceFilenameFS))
-	{
-		cout << "ERROR: Unable to find one or more resources: " << endl;
-		cout << "  " << VERTEX_SHADER_WIREFRAME << endl;
-		cout << "  " << FRAGMENT_SHADER_WIREFRAME << endl;
-		//cout << "  " << MENU_TEXTURE_FILE << endl;
-		return false;
-	}
-	r->createShaderProgram(&sid, resourceFilenameVS.c_str(), resourceFilenameFS.c_str());
+			// Create a texture object for the menu, and copy the texture data to graphics memory
+			if (!r->createTextureObject(
+				&m_TexturesID[i],
+				tgaFile.imageData,
+				tgaFile.imageWidth,
+				tgaFile.imageHeight
+			))
+			{
+				return false;
+			}
 
-	if (gamegrid->grid == NULL)
-	{
-		cout << "error en el mundo wtfffff" << endl;
-		inicializado = false;
-		return inicializado;
-	}
-	else
-	{
-		r->allocateGraphicsMemoryForObject(&(sid), &(gamegrid->vaoID),getvertex(),getn_vertex(),getvertexindex(),getn_vertexindex());
+			// Texture data is stored in graphics memory now, we don't need this copy anymore
+			if (tgaFile.imageData != NULL)
+			{
+				delete[] tgaFile.imageData;
+			}
+		}
+		else
+		{
+			// Free texture data
+			if (tgaFile.imageData != NULL)
+			{
+				delete[] tgaFile.imageData;
+			}
+
+			return false;
+		}
 		inicializado = true;
-		return inicializado;
+		r->initializeMCCube(mc);
 	}
+
+	//myHexGrid->createTextureWorld(&m_TexturesID);
+
+	return true;
 }
 
 float* CWorld::getvertex()
@@ -71,7 +109,7 @@ float* CWorld::getvertex()
 }
 size_t CWorld::getn_vertex()
 {
-	return gamegrid->vindexpos.size();
+	return gamegrid->vindexpos.size()/3;
 }
 unsigned short* CWorld::getvertexindex()
 {
@@ -82,6 +120,13 @@ size_t CWorld::getn_vertexindex()
 	return gamegrid->vindex.size()/3;
 }
 
+bool CWorld::inicializarqt()
+{
+	qt = new Quadtree(gamegrid);
+	qt->Inicializarq();
+	cout << "quad tree inicializado " << endl;
+	return true;
+}
 
 void save()
 {

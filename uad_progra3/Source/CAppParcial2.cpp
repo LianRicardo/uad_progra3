@@ -1,33 +1,31 @@
 #include "../stdafx.h"
 
 #include "windows.h"
+
+#include <iostream>
+#include <vector>
+#include <string>
+using namespace std;
+
 #include "../Include/Globals.h"
 #include "../Include/CAppParcial2.h"
 #include "../Include/C3DModel.h"
 #include "../Include/LoadTGA.h"
-#include <iostream>
-#include <vector>
-#include <string>
-#include <wchar.h>
-#include <Windows.h>
-#include "CWideStringHelper.h"
-using namespace std;
-
+#include "../Include/CWideStringHelper.h"
 
 /* */
-
-CAppParcial2::CAppParcial2() : 
+CAppParcial2::CAppParcial2() :
 	m_p3DModel(NULL),
 	m_currentDeltaTime{ 0.0 },
 	m_objectRotation{ 0.0 },
 	m_objectPosition{ 0.0f, 0.0f, 0.0f },
 	m_rotationSpeed{ DEFAULT_ROTATION_SPEED }
 {
-	Log << "Constructor: CAppParcial2()" << endl;
+	cout << "Constructor: CAppParcial2()" << endl;
 }
 
 /* */
-CAppParcial2::CAppParcial2(int window_width, int window_height) : 
+CAppParcial2::CAppParcial2(int window_width, int window_height) :
 	CApp(window_width, window_height),
 	m_p3DModel(NULL),
 	m_currentDeltaTime{ 0.0 },
@@ -35,19 +33,27 @@ CAppParcial2::CAppParcial2(int window_width, int window_height) :
 	m_objectPosition{ 0.0f, 0.0f, 0.0f },
 	m_rotationSpeed{ DEFAULT_ROTATION_SPEED }
 {
-	Log << "Constructor: CAppParcial2(int window_width, int window_height)" << endl;
+	cout << "Constructor: CAppParcial2(int window_width, int window_height)" << endl;
 }
 
 /* */
 CAppParcial2::~CAppParcial2()
 {
-	Log<< "Destructor: ~CAppParcial2()" << endl;
+	cout << "Destructor: ~CAppParcial2()" << endl;
 	unloadCurrent3DModel();
+}
+
+/* */
+void CAppParcial2::initialize()
+{
+
 }
 
 /* */
 void CAppParcial2::run()
 {
+	initialize();
+
 	// Check if CGameWindow object and window library been initialized
 	if (canRun())
 	{
@@ -61,6 +67,11 @@ void CAppParcial2::run()
 			getOpenGLRenderer()->setWindowHeight(getGameWindow()->getHeight());
 			// Initialize a test cube
 			getOpenGLRenderer()->initializeTestObjects();
+			// MCCube
+			if (!initializeMCCube())
+			{
+				return;
+			}
 
 			// Create our menu (add all menu items)
 			if (!initializeMenu())
@@ -69,16 +80,83 @@ void CAppParcial2::run()
 			}
 
 			// Enter main loop
-			Log << "Entering Main loop" << endl;
+			cout << "Entering Main loop" << endl;
 			getGameWindow()->mainLoop(this);
 		}
 	}
 }
 
 /* */
+bool CAppParcial2::initializeMCCube()
+{
+	std::wstring wresourceFilenameTexture;
+	std::string resourceFilenameTexture;
+
+	// If resource files cannot be found, return
+	if (!CWideStringHelper::GetResourceFullPath(MC_CUBE_TEXTURE, wresourceFilenameTexture, resourceFilenameTexture))
+	{
+		cout << "ERROR: Unable to find one or more resources: " << endl;
+		cout << "  " << MC_CUBE_TEXTURE << endl;
+		return false;
+	}
+
+	// Initialize the texture
+	unsigned int mcCUbeTextureID = -1;
+
+	TGAFILE tgaFile;
+	tgaFile.imageData = NULL;
+
+	if (LoadTGAFile(resourceFilenameTexture.c_str(), &tgaFile))
+	{
+		if (tgaFile.imageData == NULL ||
+			tgaFile.imageHeight < 0 ||
+			tgaFile.imageWidth < 0)
+		{
+			if (tgaFile.imageData != NULL)
+			{
+				delete[] tgaFile.imageData;
+			}
+			return false;
+		}
+
+		// Create a texture object for the menu, and copy the texture data to graphics memory
+		if (!getOpenGLRenderer()->createTextureObject(
+			&mcCUbeTextureID,
+			tgaFile.imageData,
+			tgaFile.imageWidth,
+			tgaFile.imageHeight
+		))
+		{
+			return false;
+		}
+
+		// Texture data is stored in graphics memory now, we don't need this copy anymore
+		if (tgaFile.imageData != NULL)
+		{
+			delete[] tgaFile.imageData;
+		}
+	}
+	else
+	{
+		// Free texture data
+		if (tgaFile.imageData != NULL)
+		{
+			delete[] tgaFile.imageData;
+		}
+
+		return false;
+	}
+
+	// Initialize a Minecraft cube
+	getOpenGLRenderer()->initializeMCCube(mcCUbeTextureID);
+
+	return true;
+}
+
+/* */
 bool CAppParcial2::initializeMenu()
 {
-	Log << "CAppParcial2::initializeMenu()" << endl;
+	cout << "CAppParcial2::initializeMenu()" << endl;
 
 	std::wstring wresourceFilenameVS;
 	std::wstring wresourceFilenameFS;
@@ -117,8 +195,8 @@ bool CAppParcial2::initializeMenu()
 		// Create a shader program to use for the menu
 		if (!getOpenGLRenderer()->createShaderProgram(
 			&menuShaderProgramId,
-			VERTEX_SHADER_MENU,
-			FRAGMENT_SHADER_MENU))
+			resourceFilenameVS.c_str(),
+			resourceFilenameFS.c_str()))
 		{
 			return false;
 		}
@@ -129,7 +207,7 @@ bool CAppParcial2::initializeMenu()
 		TGAFILE tgaFile;
 		tgaFile.imageData = NULL;
 
-		if (LoadTGAFile(MENU_TEXTURE_FILE, &tgaFile))
+		if (LoadTGAFile(resourceFilenameTexture.c_str(), &tgaFile))
 		{
 			if (tgaFile.imageData == NULL ||
 				tgaFile.imageHeight < 0 ||
@@ -209,7 +287,7 @@ bool CAppParcial2::initializeMenu()
 
 			menu->setColorUniformLocation(colorUniformLocation);
 			menu->setTextureUniformLocation(textureUniformLocation);
-			
+
 			menu->addMenuItem(menuOptions[i].c_str(), currentX, currentY, vaoMenuItemId);
 			currentY -= deltaY;
 
@@ -248,10 +326,12 @@ void CAppParcial2::update(double deltaTime)
 	m_currentDeltaTime = deltaTime;
 
 	// Calculate degrees to rotate
-	degreesToRotate   = m_rotationSpeed * (deltaTime / 1000.0); // degrees = rotation speed * delta time (convert delta time from milliseconds to seconds)
-
-	//comente esto para que el objeto no rotara y para mover el objeto mas facil
-	m_objectRotation += degreesToRotate;	                    // accumulate rotation degrees
+	// ----------------------------------------------------------------------------------------------------------------------------------------
+	// degrees = rotation speed * delta time 
+	// deltaTime is expressed in milliseconds, but our rotation speed is expressed in seconds (convert delta time from milliseconds to seconds)
+	degreesToRotate = m_rotationSpeed * (deltaTime / 1000.0);
+	// accumulate rotation degrees
+	m_objectRotation += degreesToRotate;
 
 	// Reset rotation if needed
 	while (m_objectRotation > 360.0)
@@ -260,7 +340,7 @@ void CAppParcial2::update(double deltaTime)
 	}
 	if (m_objectRotation < 0.0)
 	{
-		m_objectRotation -= 0.0;
+		m_objectRotation = 0.0;
 	}
 }
 
@@ -268,6 +348,8 @@ void CAppParcial2::update(double deltaTime)
 void CAppParcial2::render()
 {
 	CGameMenu *menu = getMenu();
+	CVector3 objPos2;
+	objPos2.setValues(m_objectPosition.getX() + 2.5f, m_objectPosition.getY(), m_objectPosition.getZ());
 
 	// If menu is active, render menu
 	if (menu != NULL && menu->isInitialized() && menu->isActive())
@@ -277,33 +359,46 @@ void CAppParcial2::render()
 	else // Otherwise, render active object if loaded (or test cube if no object is loaded)
 	{
 		// White 
-		float color[3] = {0.95f, 0.95f, 0.95f};
+		float color[3] = { 0.95f, 0.95f, 0.95f };
 
 		if (m_p3DModel != NULL && m_p3DModel->isInitialized())
 		{
 			// convert total degrees rotated to radians;
 			double totalDegreesRotatedRadians = m_objectRotation * 3.1459 / 180.0;
+
 			// Get a matrix that has both the object rotation and translation
-			MathHelper::Matrix4 modelMatrix   = MathHelper::ModelMatrix((float)totalDegreesRotatedRadians, m_objectPosition);
+			MathHelper::Matrix4 modelMatrix = MathHelper::ModelMatrix((float)totalDegreesRotatedRadians, m_objectPosition);
 
 			getOpenGLRenderer()->renderObject(
 				m_p3DModel->getShaderProgramId(),
 				m_p3DModel->getGraphicsMemoryObjectId(),
-				m_p3DModel->getNumFaces(), 
+				m_p3DModel->getNumFaces(),
 				color,
-				&modelMatrix
+				&modelMatrix,
+				COpenGLRenderer::EPRIMITIVE_MODE::TRIANGLES,
+				false
 			);
 		}
 		else
 		{
+			// convert total degrees rotated to radians;
 			double totalDegreesRotatedRadians = m_objectRotation * 3.1459 / 180.0;
 
 			// Get a matrix that has both the object rotation and translation
 			MathHelper::Matrix4 modelMatrix = MathHelper::ModelMatrix((float)totalDegreesRotatedRadians, m_objectPosition);
 
+			CVector3 pos2 = m_objectPosition;
+			pos2 += CVector3(3.0f, 0.0f, 0.0f);
+			MathHelper::Matrix4 modelMatrix2 = MathHelper::ModelMatrix((float)totalDegreesRotatedRadians, pos2);
+
+			/*
+			MathHelper::Matrix4 viewMatrix = MathHelper::SimpleViewMatrix(m_cameraDistance);
+			MathHelper::Matrix4 projectionMatrix = MathHelper::SimpleProjectionMatrix(float(m_windowWidth) / float(m_windowHeight));
+			*/
+
 			// No model loaded, show test cube
 			getOpenGLRenderer()->renderTestObject(&modelMatrix);
-			
+			getOpenGLRenderer()->renderMCCube(&modelMatrix2);
 		}
 	}
 }
@@ -311,43 +406,66 @@ void CAppParcial2::render()
 /* */
 bool CAppParcial2::load3DModel(const char * const filename)
 {
+	std::wstring wresourceFilenameVS;
+	std::wstring wresourceFilenameFS;
+	std::string resourceFilenameVS;
+	std::string resourceFilenameFS;
+
+	char *vertexShaderToLoad = VERTEX_SHADER_3D_OBJECT;
+	char *fragmentShaderToLoad = FRAGMENT_SHADER_3D_OBJECT;
+
 	// Unload any current 3D model
 	unloadCurrent3DModel();
 
-	// Toma el tamaño necesario para crear el arreglo de caracteres.  strlen documentación  https://msdn.microsoft.com/en-us/library/78zh94ax.aspx?f=255&MSPPError=-2147217396
-	int num_chars = MultiByteToWideChar(CP_UTF8, 0, filename, (int)strlen(filename), NULL, 0);
-
-	//Genera un string del tamaño especificado por usuario y lo llena con caracteres del alfabeto    http://www.cplusplus.com/reference/cstdlib/malloc/ 
-	//wchar_t* wstrTo = (wchar_t*)malloc((num_chars + 1) * sizeof(wchar_t));
-	wchar_t* wstrTo = new wchar_t[num_chars + 1];
-
-
-	// Convierte la linea de caracteres y lo almacena en la hecha previamente
-	MultiByteToWideChar(CP_UTF8, 0, &filename[0], (int)strlen(filename), wstrTo, num_chars);
-	wstrTo[num_chars] = '\0';
-	
-	bool loaded = false;
-
 	// Create new 3D object
-	m_p3DModel = C3DModel::Load(wstrTo);
+	m_p3DModel = C3DModel::load(filename);
 
-	if(m_p3DModel!=	NULL)
+	if (m_p3DModel == nullptr)
 	{
-		// Load object from file
-		loaded = m_p3DModel->isInitialized();
+		cout << "ERROR: Unable read model from file" << endl;
+		return false;
 	}
-	else
-	{
-		Log << "error no se pudo cargar el archivo" << endl;
-	}
+
+	// Load object from file
+	bool loaded = m_p3DModel->isInitialized();
 
 	if (loaded)
 	{
+		// By default, shaders to be loaded are for non-textured objects, but if the model has a valid texture filename and UVs, 
+		// load the appropriate shader instead 
+		if (m_p3DModel->hasUVs() && m_p3DModel->hasTextureFilename())
+		{
+			vertexShaderToLoad = VERTEX_SHADER_TEXTURED_3D_OBJECT;
+			fragmentShaderToLoad = FRAGMENT_SHADER_TEXTURED_3D_OBJECT;
+		}
+
+		// TO-DO: LOAD TEXTURE AND ALSO CREATE TEXTURE OBJECT !!!!
+
+		// TO-DO: LOAD ALL POSSIBLE SHADERS FOR 3D OBJECT UP FRONT AND THEN JUST SWITCH THE ACTIVE ONE
+
+		// If resource files cannot be found, return
+		if (!CWideStringHelper::GetResourceFullPath(vertexShaderToLoad, wresourceFilenameVS, resourceFilenameVS) ||
+			!CWideStringHelper::GetResourceFullPath(fragmentShaderToLoad, wresourceFilenameFS, resourceFilenameFS))
+		{
+			cout << "ERROR: Unable to find one or more resources: " << endl;
+			cout << "  " << vertexShaderToLoad << endl;
+			cout << "  " << fragmentShaderToLoad << endl;
+
+			return false;
+		}
+
+		// Create a shader program for this object
+		getOpenGLRenderer()->createShaderProgram(
+			&m_currentModelShaderId,
+			resourceFilenameVS.c_str(),
+			resourceFilenameFS.c_str());
+
+		// Save the shader program ID in the model as well
+		m_p3DModel->setShaderProgramId(m_currentModelShaderId);
+
 		// Allocate graphics memory for object
 		loaded = getOpenGLRenderer()->allocateGraphicsMemoryForObject(
 			m_p3DModel->getShaderProgramId(),
-			VERTEX_SHADER_3D_OBJECTS,
-			FRAGMENT_SHADER_3D_OBJECTS,
 			m_p3DModel->getGraphicsMemoryObjectId(),
 			m_p3DModel->getModelVertices(),
 			m_p3DModel->getNumVertices(),
@@ -358,9 +476,9 @@ bool CAppParcial2::load3DModel(const char * const filename)
 			m_p3DModel->getModelVertexIndices(),
 			m_p3DModel->getNumFaces(),
 			m_p3DModel->getModelNormalIndices(),
-			((m_p3DModel)?(m_p3DModel->getNumFaces()):0),
+			((m_p3DModel) ? (m_p3DModel->getNumFaces()) : 0),
 			m_p3DModel->getModelUVCoordIndices(),
-			((m_p3DModel)?(m_p3DModel->getNumFaces()):0)
+			((m_p3DModel) ? (m_p3DModel->getNumFaces()) : 0)
 		);
 
 		// If error ocurred, cleanup memory
@@ -373,11 +491,6 @@ bool CAppParcial2::load3DModel(const char * const filename)
 	return loaded;
 }
 
-void CAppParcial2::inicialized()
-{
-
-}
-
 /* */
 void CAppParcial2::unloadCurrent3DModel()
 {
@@ -388,6 +501,12 @@ void CAppParcial2::unloadCurrent3DModel()
 			m_p3DModel->getShaderProgramId(),
 			m_p3DModel->getGraphicsMemoryObjectId()
 		);
+
+		// Free up texture object memory
+		if (m_currentModelTextureObject > 0)
+		{
+			getOpenGLRenderer()->deleteTexture(m_p3DModel->getTextureObjectId());
+		}
 
 		// Delete 3D object
 		delete m_p3DModel;
@@ -404,23 +523,23 @@ void CAppParcial2::onF2(int mods)
 	OPENFILENAME ofn;
 	ZeroMemory(&ofn, sizeof(ofn));
 	ofn.lStructSize = sizeof(ofn);
-	ofn.hwndOwner   = NULL;
-	ofn.lpstrFilter = L"Obj Files\0*.obj\0All files\0*.*\0";
-	ofn.lpstrFile   = &wideStringBuffer[0];
-	ofn.nMaxFile    = MAX_PATH;
-	ofn.lpstrTitle  = L"Select a model file";
-	ofn.Flags       = OFN_DONTADDTORECENT | OFN_FILEMUSTEXIST;
+	ofn.hwndOwner = NULL;
+	ofn.lpstrFilter = L" Obj Files\0*.obj\0 Stl Files\0*.stl\0 3DS Files\0*.3ds\0 All files\0*.*\0";
+	ofn.lpstrFile = &wideStringBuffer[0];
+	ofn.nMaxFile = MAX_PATH;
+	ofn.lpstrTitle = L"Select a model file";
+	ofn.Flags = OFN_DONTADDTORECENT | OFN_FILEMUSTEXIST;
 
 	if (GetOpenFileName(&ofn))
 	{
 		int size_needed = WideCharToMultiByte(CP_UTF8, 0, &wideStringBuffer[0], (int)wideStringBuffer.size(), NULL, 0, NULL, NULL);
 		std::string multibyteString(size_needed, 0);
 		WideCharToMultiByte(CP_UTF8, 0, &wideStringBuffer[0], (int)wideStringBuffer.size(), &multibyteString[0], size_needed, NULL, NULL);
-		Log << "Filename to load: " << multibyteString.c_str() << endl;
+		cout << "Filename to load: " << multibyteString.c_str() << endl;
 
 		if (!load3DModel(multibyteString.c_str()))
 		{
-			Log << "Unable to load 3D model" << endl;
+			cout << "Unable to load 3D model" << endl;
 		}
 	}
 }
@@ -439,43 +558,19 @@ void CAppParcial2::onF3(int mods)
 	}
 }
 
-void CAppParcial2::onF4(int mods)
+/* */
+void CAppParcial2::onMouse(float deltaX, float deltaY)
 {
-	_STARTUPINFOW notep = { sizeof(_STARTUPINFOW) };
-	TCHAR c[] = TEXT("notepad");
-	_PROCESS_INFORMATION info;
-	CreateProcess(NULL, c, NULL, NULL, false, NULL, NULL, NULL, &notep, &info);
-}
-
-void CAppParcial2::onArrowUp(int mods)
-{
-	m_objectPosition += m_Up;
-}
-
-void CAppParcial2::onArrowDown(int mods)
-{
-	m_objectPosition += m_Down;
-}
-
-void CAppParcial2::onArrowLeft(int mods)
-{
-	m_objectPosition += m_Left;
-}
-
-void CAppParcial2::onArrowRight(int mods)
-{
-	m_objectPosition += m_Right;
-}
-
-void CAppParcial2::onMouseMove(float deltaX, float deltaY)
-{
-	if (deltaX < 100.0f && deltaY < 100.0f)
+	if (deltaX < 100 && deltaY < 100)
 	{
-		float posiciones[3];
-		m_objectPosition.getValues(posiciones);
-		posiciones[0] -= deltaX * DEFAULT_SPEED;
-		posiciones[2] -= deltaY * DEFAULT_SPEED;
-		m_objectPosition.setValues(posiciones);
+		float moveX = -deltaX * DEFAULT_CAMERA_MOVE_SPEED;
+		float moveZ = -deltaY * DEFAULT_CAMERA_MOVE_SPEED;
+
+		float currPos[3];
+		m_objectPosition.getValues(currPos);
+		currPos[0] += moveX;
+		currPos[2] += moveZ;
+		m_objectPosition.setValues(currPos);
 	}
 }
 
@@ -502,7 +597,7 @@ void CAppParcial2::executeMenuAction()
 			break;
 		case 2:
 			// Not implemented
-			Log << "<MENU OPTION NOT IMPLEMENTED>" << endl;
+			cout << "<MENU OPTION NOT IMPLEMENTED>" << endl;
 			break;
 		case 3:
 			if (getGameWindow() != NULL)

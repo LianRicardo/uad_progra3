@@ -16,10 +16,15 @@ CappProyecto::CappProyecto()
 {
 	Log << "CAppProyecto3" << endl;
 	myWorld = new CWorld(getOpenGLRenderer());
+	//gamegrid = new CGameGrid(getOpenGLRenderer());
 }
 
-CappProyecto::CappProyecto(int window_width, int window_height) : 
-	CApp(window_width, window_height)
+CappProyecto::CappProyecto(int window_width, int window_height) :
+	CApp(window_width, window_height),
+	m_currentDeltaTime{ 0.0 },
+	m_objectRotation{ 0.0 },
+	m_objectPosition{ 0.0f, 0.0f, 0.0f },
+	m_rotationSpeed{ DEFAULT_ROTATION_SPEED }
 {
 	Log << "constructor prron" << endl;
 	myWorld = new CWorld(getOpenGLRenderer());
@@ -32,13 +37,32 @@ CappProyecto::~CappProyecto()
 
 void CappProyecto::onMouse(float deltaX, float deltaY)
 {
-	/*CCamera* cam = getcamara();
-
-	if (cam != NULL) 
+	CCamera* cam = getcamara();
+	if (cam != nullptr) 
 	{
-		cam->move(deltaX, deltaY);
-	}*/
+		cam->move(-deltaX * CAMERA_SPEED, deltaY * CAMERA_SPEED);
+	}
 }
+void CappProyecto::onF3(int mods)
+{
+	if (mods & KEY_MOD_SHIFT)
+	{
+		moveCamera(-1.0f);
+	}
+	else
+	{
+		moveCamera(1.0f);
+	}
+}
+
+void CappProyecto::moveCamera(float direction)
+{
+	if (getOpenGLRenderer() != NULL)
+	{
+		getOpenGLRenderer()->moveCamera(direction);
+	}
+}
+
 
 void CappProyecto::run()
 {
@@ -46,11 +70,11 @@ void CappProyecto::run()
 	if (canRun())
 	{
 		// Create the Window 
-		if (getGameWindow()->create(CAPPPARCIAL2_WINDOW_TITLE))
+		if (getGameWindow()->create(CAPPPARCIAL3_WINDOW_TITLE))
 		{
 			if(!myWorld->inicializado)
 			{
-				myWorld->gamegrid->thread1 = CreateThread(nullptr, 0, myWorld->gamegrid->inicializar, this, 0, &myWorld->gamegrid->hextrhead_id);
+				inicialize();
 			}
 				// Set initial clear screen color
 				getOpenGLRenderer()->setClearScreenColor(0.15f, 0.75f, 0.75f);
@@ -76,7 +100,6 @@ void CappProyecto::run()
 bool CappProyecto::initializeMenu()
 {
 	Log << "CAppParcial2::initializeMenu()" << endl;
-
 	std::wstring wresourceFilenameVS;
 	std::wstring wresourceFilenameFS;
 	std::wstring wresourceFilenameTexture;
@@ -227,14 +250,12 @@ bool CappProyecto::initializeMenu()
 
 		return true;
 	}
-
-	return false;
     return true;
 }
 
 void CappProyecto::update(double deltaTime)
 {
-	/*double degreesToRotate = 0.0;
+	double degreesToRotate = 0.0;
 
 	if (deltaTime <= 0.0f)
 	{
@@ -245,39 +266,39 @@ void CappProyecto::update(double deltaTime)
 	m_currentDeltaTime = deltaTime;
 
 	// Calculate degrees to rotate
-	degreesToRotate = m_rotationSpeed * (deltaTime / 1000.0); // degrees = rotation speed * delta time (convert delta time from milliseconds to seconds)
+	// ----------------------------------------------------------------------------------------------------------------------------------------
+	// degrees = rotation speed * delta time 
+	// deltaTime is expressed in milliseconds, but our rotation speed is expressed in seconds (convert delta time from milliseconds to seconds)
+	degreesToRotate = m_rotationSpeed * (deltaTime / 1000.0);
+	// accumulate rotation degrees
+	m_objectRotation += degreesToRotate;
 
-															  //comente esto para que el objeto no rotara y para mover el objeto mas facil
-	m_objectRotation += degreesToRotate;	                    // accumulate rotation degrees
-
-																// Reset rotation if needed
+	// Reset rotation if needed
 	while (m_objectRotation > 360.0)
 	{
 		m_objectRotation -= 360.0;
 	}
 	if (m_objectRotation < 0.0)
 	{
-		m_objectRotation -= 0.0;
-	}*/
+		m_objectRotation = 0.0;
+	}
 }
-
 void CappProyecto::render()
 {
-	DWORD stillactive;
-	GetExitCodeThread(myWorld->gamegrid->thread1, &stillactive);
-	if (stillactive == STILL_ACTIVE)
-	{
-		double totalDegreesRotatedRadians = 360 * 3.1459 / 180.0;
+	CGameMenu *menu = getMenu();
 
-		// Get a matrix that has both the object rotation and translation
-		CVector3 zero = { 0,0,0 };
-		MathHelper::Matrix4 modelMatrix = MathHelper::ModelMatrix((float)totalDegreesRotatedRadians, zero);
-		// No model loaded, show test cube
-		getOpenGLRenderer()->renderTestObject(&modelMatrix);
-	}
-	else
+	// If menu is active, render menu
+	if (menu != NULL && menu->isInitialized() && menu->isActive())
 	{
-		myWorld->render();
+		menu->render(getOpenGLRenderer());
+	}
+	else // Otherwise, render active object if loaded (or test cube if no object is loaded)
+	{
+		// White 
+		float color[3] = { 0.95f, 0.95f, 0.95f };
+			// Get a matrix that has both the object rotation and translation
+			//MathHelper::Matrix4 modelMatrix = MathHelper::ModelMatrix((float)totalDegreesRotatedRadians, m_objectPosition);
+			myWorld->render(getcamara()->getPosition());
 	}
 }
 
@@ -285,6 +306,7 @@ bool CappProyecto::inicialize()
 {
 	if (myWorld->init())
 	{
+		myWorld->inicializarqt();
 		return true;
 	}
 	else return false;

@@ -19,14 +19,17 @@ CApp::CApp()
 	// Create CGameMenu Object
 	// Menu will be initialized later (menu items added)
 	m_Menu = new CGameMenu();
+
+	//Create Camera Objetc
 	m_camara = new CCamera();
+
 }
 
 /* */
 CApp::CApp(int window_width, int window_height)
 {
 	Log << "Constructor: CApp(int window_width, int window_height)" << endl;
-	
+
 	// Create OpenGLRenderer Object
 	m_OpenGLRenderer = new COpenGLRenderer();
 
@@ -36,6 +39,8 @@ CApp::CApp(int window_width, int window_height)
 	// Create CGameMenu Object
 	// Menu will be initialized later (menu items added)
 	m_Menu = new CGameMenu();
+
+	//Create Camera Objetc
 	m_camara = new CCamera();
 }
 
@@ -47,7 +52,7 @@ CApp::~CApp()
 	// Free CGameWindow object resources
 	if (m_Window != NULL)
 	{
-		cout << "Delete m_Window" << endl;
+		Log << "Delete m_Window" << endl;
 		delete m_Window;
 	}
 
@@ -59,7 +64,7 @@ CApp::~CApp()
 		// Cleanup call deleteVertexArrayObject
 		m_Menu->cleanupGraphicsObjects(m_OpenGLRenderer);
 
-		cout << "Delete m_Menu" << endl;
+		Log << "Delete m_Menu" << endl;
 		delete m_Menu;
 	}
 
@@ -162,4 +167,5 @@ void CApp::selectPrevMenuItem()
 		Log << "Selected option is #" << m_Menu->getSelectedMenuItemNumber() << endl;
 	}
 }
+
 

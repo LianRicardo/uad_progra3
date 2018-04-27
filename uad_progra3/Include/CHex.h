@@ -8,22 +8,31 @@
 
 class CHex
 {
-	void set(CVector3 center, CVector3 pos, CVector3 v[6]);
 public:
 	CVector3 center;
 	CVector3 pos;
 	CVector3 v[6];
-	const float size = sqrt(3) / 2;
-	void inicializarhexcell(int id_x, int id_y)
+	unsigned int *graphicMemoryObjectId;
+	//const float s = sqrt(3) / 2;
+	unsigned int texture_id;
+	const float s = 1.0f;
+	void getVertices(float * v);
+	CVector3 CHex::getpoint(int p)
 	{
-		v[0].setValues(id_x - size, 0, id_y);
-		v[1].setValues(id_x - (size / 2), 0, id_y + 0.5);
-		v[2].setValues(id_x + (size / 2), 0, id_y + 0.5);
-		v[3].setValues(id_x + size, 0, id_y);
-		v[4].setValues(id_x + (size/2), 0, id_y - 0.5);
-		v[5].setValues(id_x - (size / 2), 0, id_y - 0.5);
-		center.setValues(id_x * (size), 0, id_y - (id_y % 2 != 0) ? 0 : 0.5);
+		return v[p];
 	}
-	CHex();
+	void CHex::settexture_id(unsigned int texture_id)
+	{
+		this->texture_id = texture_id;
+	}
+	CVector3 CHex::getcenter()
+	{
+		return this->center;
+	}
+	unsigned int * CHex::getGraphicMemoryObjectId()
+	{
+		return graphicMemoryObjectId;
+	}
+	CHex(float x, float y, const float s, float a);
 	~CHex();
 };

@@ -82,9 +82,9 @@ extern "C" {
 		//        It's left as a to-do for improvements...
 		/*for (int imageIdx = 0; imageIdx < imageSize; imageIdx += colorMode)
 		{
-			colorSwap = tgaFile->imageData[imageIdx];
-			tgaFile->imageData[imageIdx] = tgaFile->imageData[imageIdx + 2];
-			tgaFile->imageData[imageIdx + 2] = colorSwap;
+		colorSwap = tgaFile->imageData[imageIdx];
+		tgaFile->imageData[imageIdx] = tgaFile->imageData[imageIdx + 2];
+		tgaFile->imageData[imageIdx + 2] = colorSwap;
 		}*/
 
 		fclose(filePtr);

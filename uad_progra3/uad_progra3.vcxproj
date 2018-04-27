@@ -194,6 +194,7 @@
     <ClInclude Include="Include\LoadTGA.h" />
     <ClInclude Include="Include\MathHelper.h" />
     <ClInclude Include="Include\Quadtree.h" />
+    <ClInclude Include="Include\QuadtreeN.h" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Dependencies\GLAD\glad-4.3-core\src\glad.c">
@@ -225,6 +226,7 @@
     <ClCompile Include="Source\LoadShaders.cpp" />
     <ClCompile Include="Source\LoadTGA.cpp" />
     <ClCompile Include="Source\Quadtree.cpp" />
+    <ClCompile Include="Source\QuadtreeN.cpp" />
     <ClCompile Include="uad_progra3.cpp" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />

@@ -6,10 +6,9 @@
 // include glad *before* glfw
 #include <glad/glad.h>
 #include <GLFW/glfw3.h>
-#include <string>
-using namespace std;
 
 #include "MathHelper.h"
+#include <string>
 
 #define BUFFER_OFFSET(a) ((void*)(a))
 #define MIN_CAMERA_DISTANCE 5.0f
@@ -56,6 +55,16 @@ private:
 	GLuint mVertexPositionBuffer;
 	GLuint mVertexColorBuffer;
 	GLuint mIndexBuffer;
+
+	GLuint mMCCubeShaderProgramID;
+	GLuint mMCCubeVAOID;
+	GLint  sh_MCCubeUVAttribLocation;
+	GLuint mMCCubeVertexUVBuffer;
+	GLuint mMCCubeVertexPositionBuffer;
+	GLuint mMCCubeVertexColorBuffer;
+	GLuint mMCCubeIndexBuffer;
+	GLint  mMCCubeTextureUniformLocation;
+	GLuint mMCCubeTextureID;
 	// ===========================
 
 	//
@@ -107,11 +116,10 @@ public:
 
 	// =================================================================
 	// Allocates graphics memory for a given 3D object 
+	// Note: shader program must be already created
 	// =================================================================
 	bool allocateGraphicsMemoryForObject(
 		unsigned int *shaderProgramId,
-		const char *vertexShader,
-		const char *fragmentShader,
 		unsigned int *vertexArrayObjectID,
 		GLfloat *vertices, int numVertices,
 		GLfloat *normals, int numNormals,
@@ -121,7 +129,8 @@ public:
 		unsigned short *indicesUVCoords, int numIndicesUVCoords);
 
 	// =================================================================
-	// Allocates graphics memory for a given 3D object 
+	// Allocates graphics memory for a given 3D object
+	// Note: shader program must be already created
 	// =================================================================
 	bool allocateGraphicsMemoryForObject(
 		const unsigned int * const shaderProgramId,
@@ -202,6 +211,10 @@ public:
 	void initializeTestObjects();
 
 	//
+	void renderMCCube(MathHelper::Matrix4 *objectTransformation = NULL);
+	void initializeMCCube(unsigned int textureObjectId);
+
+	//
 	bool checkOpenGLError(char *operationAttempted);
 
 	//
@@ -230,7 +243,7 @@ public:
 	void clearScreen() { glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT); }
 
 	//
-    void drawString(unsigned int *textureObjectId, std::string &text, float x, float y, CVector3 &color);
+	void drawString(unsigned int *textureObjectId, std::string &text, float x, float y, CVector3 &color);
 };
 
 #endif // !_OPENGL_RENDERER_H

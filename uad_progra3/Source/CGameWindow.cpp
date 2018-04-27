@@ -24,19 +24,22 @@ bool CGameWindow::requestF9 = false;
 bool CGameWindow::requestF10 = false;
 bool CGameWindow::requestF11 = false;
 bool CGameWindow::requestF12 = false;
+bool CGameWindow::requestMouseMove = false;
+
+bool CGameWindow::requestExecuteAction = false;
+bool CGameWindow::requestSelectNextMenuItem = false;
+bool CGameWindow::requestSelectPrevMenuItem = false;
 bool CGameWindow::requestArrowUp = false;
 bool CGameWindow::requestArrowDown = false;
 bool CGameWindow::requestArrowLeft = false;
 bool CGameWindow::requestArrowRight = false;
-bool CGameWindow::requestExecuteAction = false;
-bool CGameWindow::requestSelectNextMenuItem = false;
-bool CGameWindow::requestSelectPrevMenuItem = false;
-bool CGameWindow::requestmouse = false;
 int  CGameWindow::keyMods = 0;
+
 int  CGameWindow::newWidth = 0;
 int  CGameWindow::newHeight = 0;
-CVector3 CGameWindow::lmousep = { 0,0,0 };
-CVector3 CGameWindow::cursormov = { 0,0,0 };
+
+CVector3 CGameWindow::lastMousePos = { 0,0,0 };
+CVector3 CGameWindow::cursorMovement = { 0,0,0 };
 
 /* Default constructor
 */
@@ -136,7 +139,7 @@ bool CGameWindow::create(const char *windowTitle)
 	Log << "OpenGL version: " << m_ReferenceRenderer->getOpenGLString(GL_VERSION) << endl; // GLVersion.major, GLVersion.minor
 	Log << "GLSL version: " << m_ReferenceRenderer->getOpenGLString(GL_SHADING_LANGUAGE_VERSION) << endl;
 
-	const GLFWvidmode* monitor1 = glfwGetVideoMode(glfwGetPrimaryMonitor());
+	const GLFWvidmode* view = glfwGetVideoMode(glfwGetPrimaryMonitor());
 
 	/* Capture ESC key */
 	glfwSetInputMode(m_Window, GLFW_STICKY_KEYS, GL_TRUE);
@@ -144,14 +147,23 @@ bool CGameWindow::create(const char *windowTitle)
 	/* Keyboard callback */
 	glfwSetKeyCallback(m_Window, keyboardCallback);
 
+	/* Mouse callback*/
 	glfwSetCursorPosCallback(m_Window, mouseCallback);
 
+	/* Hides mouse */
 	glfwSetInputMode(m_Window, GLFW_CURSOR, GLFW_CURSOR_DISABLED);
-	glfwSetWindowPos(m_Window, 15, (monitor1->height - m_Height) / 2);
+
+	/* Set window to pos */
+	glfwSetWindowPos(m_Window, 10, (view->height - m_Height) / 2);
+
+	/* Mouse Button callbak */
+	glfwSetMouseButtonCallback(m_Window, mouseButtonCallback);
+
+
 	HWND consoleWindow = GetConsoleWindow();
 	RECT r;
 	GetWindowRect(consoleWindow, &r);
-	SetWindowPos(consoleWindow, 0, 5 + m_Width + 5, (monitor1->height - m_Height) / 2, 0, 0, SWP_NOSIZE | SWP_NOZORDER);
+	SetWindowPos(consoleWindow, 0, 10 + m_Width + 10, (view->height - m_Height) / 2, 0, 0, SWP_NOSIZE | SWP_NOZORDER);
 
 	return true;
 }
@@ -165,19 +177,20 @@ bool CGameWindow::create(const char *windowTitle)
 */
 void CGameWindow::mainLoop(void *appPointer)
 {
-	double mousex;
-	double mousey;
+	// Get mouse stuff
+	double currMouseX;
+	double currMouseY;
 
 	// Variables for time-based animation
 	double last_time = 0;
-	double deltat = 1000 / 60;  // constant dt step of 1 frame every 60 seconds
-	double contador = 0;
-	double current_time, delta_time;
+	double dt = 1000 / 60;  // constant dt step of 1 frame every 60 seconds
+	double accumulator = 0;
+	double current_time, delta_time, one_second = 0;
 	double PCFreq = 0.0;
+	double fps = 0.0;
 	__int64 CounterStart = 0;
+	int numFramesRendered = 0;
 	LARGE_INTEGER li;
-	int framerate = 0;
-	bool notFirstFrame = false;   //   Checks that is not the first frame
 
 	if (m_Window == NULL || appPointer == NULL || m_ReferenceRenderer == NULL)
 		return;
@@ -196,11 +209,13 @@ void CGameWindow::mainLoop(void *appPointer)
 	PCFreq = double(li.QuadPart) / 1000.0;
 	QueryPerformanceCounter(&li);
 	CounterStart = li.QuadPart;
-	last_time = double(li.QuadPart) / PCFreq;
+	last_time = double(li.QuadPart - CounterStart) / PCFreq;
 
 	/* Loop until the user closes the window */
 	while (!glfwWindowShouldClose(m_Window))
 	{
+		numFramesRendered++;
+
 		/* Clear color and depth buffer */
 		m_ReferenceRenderer->clearScreen();
 
@@ -213,22 +228,29 @@ void CGameWindow::mainLoop(void *appPointer)
 		current_time = double(li.QuadPart - CounterStart) / PCFreq;
 		delta_time = current_time - last_time; // Calculate elapsed time
 		last_time = current_time;             // Update last time to be the current time
-		contador += delta_time;
-		// 
-		if (!notFirstFrame) {     //  Don't know why the first time it runs accumulator is negative
-			contador = 0;
-			notFirstFrame = true;    // Set the flag off
-		}
+		accumulator += delta_time;
 
-		/* dt*62.5 equals one sec */
-		while (contador >= (deltat*62.5)) {    //   If accumulator is 1 sec then print FPS's and set accumulator to 0  
-			Log << "FPS : " << framerate << endl;
-			framerate = 0;
-			contador -= (deltat*62.5);
-		}
+		if (delta_time > 0.0)
+		{
+			accumulator += delta_time;
 
-		/* Update */
-		((CApp *)appPointer)->update((float)delta_time);
+			while (accumulator >= dt) {
+				/* Update */
+				((CApp *)appPointer)->update(dt);
+
+				accumulator -= dt;
+			}
+
+			// Calculate FPS
+			one_second += delta_time;
+			if (one_second > 1000.0)
+			{
+				fps = (numFramesRendered / (one_second / 1000.0));
+				one_second -= 1000.0;
+				//cout << "FPS: " << fps << endl;
+				numFramesRendered = 0;
+			}
+		}
 
 		/* Render */
 		((CApp *)appPointer)->render();
@@ -238,7 +260,7 @@ void CGameWindow::mainLoop(void *appPointer)
 
 		/* Poll for and process events */
 		glfwPollEvents();
-		framerate++;
+
 	}
 
 	/* Cleanup GLFW window */
@@ -300,22 +322,26 @@ void CGameWindow::keyboardCallback(GLFWwindow * window, int key, int scancode, i
 		case GLFW_KEY_F12:
 			CGameWindow::requestF12 = true;
 			break;
-			// ARROW DOWN key selects the next menu item
+			// ARROW DOWN key selects the next menu item if menu is active, application-specific otherwise
 		case GLFW_KEY_DOWN:
 			CGameWindow::requestSelectNextMenuItem = true;
 			CGameWindow::requestArrowDown = true;
 			break;
-			// ARROW UP key selects the prev menu item
+			// ARROW UP key selects the prev menu item if menu is active, application-specific otherwise
 		case GLFW_KEY_UP:
 			CGameWindow::requestSelectPrevMenuItem = true;
 			CGameWindow::requestArrowUp = true;
 			break;
-		case GLFW_KEY_RIGHT:
-			CGameWindow::requestArrowRight = true;
-			break;
+			// ARROW LEFT, app-specific
 		case GLFW_KEY_LEFT:
 			CGameWindow::requestArrowLeft = true;
 			break;
+			// ARROW RIGHT, app-specific
+		case GLFW_KEY_RIGHT:
+			CGameWindow::requestArrowRight = true;
+			break;
+			// ARROW RIGHT, app-specific
+
 			// ENTER key executes the current menu item action
 		case GLFW_KEY_ENTER:
 			CGameWindow::requestExecuteAction = true;
@@ -327,7 +353,6 @@ void CGameWindow::keyboardCallback(GLFWwindow * window, int key, int scancode, i
 		// Clear key modifiers
 		CGameWindow::keyMods = 0;
 
-		
 		switch (key)
 		{
 		case GLFW_KEY_UP:
@@ -346,18 +371,28 @@ void CGameWindow::keyboardCallback(GLFWwindow * window, int key, int scancode, i
 	}
 }
 
-void CGameWindow::mouseCallback(GLFWwindow * window, double x, double y)
+void CGameWindow::mouseButtonCallback(GLFWwindow * window, int button, int action, int mods)
 {
-	if (x != 0 && y != 0)
-	{
-		CGameWindow::requestmouse = true;
-
-		auto last = CGameWindow::lmousep;
-		CVector3 nPos(x, y, 0);
-		CGameWindow::cursormov = nPos - last;
-		CGameWindow::lmousep = nPos;
+	if (button == GLFW_MOUSE_BUTTON_LEFT && action == GLFW_PRESS) {
+		std::cout << lastMousePos.getX() << " ";
+		std::cout << lastMousePos.getY() << " ";
+		std::cout << lastMousePos.getY() << " ";
+		std::cout << std::endl;
 	}
-	else CGameWindow::requestmouse = false;
+}
+
+void CGameWindow::mouseCallback(GLFWwindow * window, double xpos, double ypos)
+{
+	if (xpos != 0 && ypos != 0)
+	{
+		CGameWindow::requestMouseMove = true;
+
+		auto last = CGameWindow::lastMousePos;
+		CVector3 nPos(xpos, ypos, 0);
+		CGameWindow::cursorMovement = nPos - last;
+		CGameWindow::lastMousePos = nPos;
+	}
+	else CGameWindow::requestMouseMove = false;
 }
 
 /*
@@ -476,10 +511,13 @@ void CGameWindow::processInput(void *appPointer)
 		}
 		else
 		{
+
+
 			CGameWindow::requestExecuteAction = false;
 			CGameWindow::requestSelectNextMenuItem = false;
 			CGameWindow::requestSelectPrevMenuItem = false;
 
+			// Check the arrow keys
 			if (CGameWindow::requestArrowUp)
 			{
 				((CApp *)appPointer)->onArrowUp(CGameWindow::keyMods);
@@ -496,9 +534,11 @@ void CGameWindow::processInput(void *appPointer)
 			{
 				((CApp *)appPointer)->onArrowRight(CGameWindow::keyMods);
 			}
-			if (CGameWindow::requestmouse)
+
+			if (CGameWindow::requestMouseMove)
 			{
-				((CApp *)appPointer)->onMouseMove(CGameWindow::cursormov.getX(), CGameWindow::cursormov.getY());
+				((CApp *)appPointer)->onMouse(CGameWindow::cursorMovement.getX(), CGameWindow::cursorMovement.getY());
+				requestMouseMove = false;
 			}
 		}
 	}
